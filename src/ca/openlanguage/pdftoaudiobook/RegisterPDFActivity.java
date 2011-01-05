@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RegisterPDFActivity extends Activity {
 	
@@ -31,8 +32,46 @@ public class RegisterPDFActivity extends Activity {
         
 
         setContentView(R.layout.register_pdf);
-        filePath = getPDFFilePath();
+        getPDFFileNameAndPath();
+        fillDocumentDetailsIntoForm();
+
         
+        //TextView message = (TextView)findViewById(R.id.message);
+        //message.setText("hi");
+    }
+    /**
+     * Return file name and path.
+     * @return string
+     */
+    private void getPDFFileNameAndPath() {
+        final Intent intent = getIntent();
+		Uri uri = intent.getData();    	
+		filePath = uri.getPath().toString();
+		
+		int lastPosition = uri.getPathSegments().size() - 1 ;
+		fileName = uri.getPathSegments().get(lastPosition);
+		
+		if (uri.getScheme().equals("file")) {
+			return ;//filePath;
+    		//return new PDF(new File(filePath));
+    	} else if (uri.getScheme().equals("content")) {
+    		ContentResolver cr = this.getContentResolver();
+    		FileDescriptor fileDescriptor;
+			try {
+				fileDescriptor = cr.openFileDescriptor(uri, "r").getFileDescriptor();
+			} catch (FileNotFoundException e) {
+				throw new RuntimeException(e); // TODO: handle errors
+			}
+			fileName = "Unknown - 2010 - Unknown.pdf";
+			filePath = "Unknown - 2010 - Unknown.pdf";//fileDescriptor.toString();
+			return ;//fileDescriptor.toString();
+    		//return new PDF(fileDescriptor);
+    	} else {
+    		throw new RuntimeException("don't know how to get filename from " + uri);
+    	}
+    }
+    private void fillDocumentDetailsIntoForm(){
+    	
         mFilePathEditText = (EditText)findViewById(R.id.filePathText);
         mFilePathEditText.setText(filePath, TextView.BufferType.EDITABLE);
         mFileNameEditText = (EditText)findViewById(R.id.fileNameText);
@@ -58,35 +97,9 @@ public class RegisterPDFActivity extends Activity {
         mDocPubDateEditText.setText(date);
         mDocCitationsEditText.setText(citations);
         
+        Toast tellUserInfoSource = Toast.makeText(this, 
+        		"Document info was auto-filled based on the file name. \n\n You can make any corrections needed.", Toast.LENGTH_LONG);
+        tellUserInfoSource.show();
         
-        //TextView message = (TextView)findViewById(R.id.message);
-        //message.setText("hi");
-    }
-    /**
-     * Return file name and path.
-     * @return string
-     */
-    private String getPDFFilePath() {
-        final Intent intent = getIntent();
-		Uri uri = intent.getData();    	
-		filePath = uri.getPath().toString();
-		int lastPosition = uri.getPathSegments().size() - 1 ;
-		fileName = uri.getPathSegments().get(lastPosition);
-		if (uri.getScheme().equals("file")) {
-			return filePath;
-    		//return new PDF(new File(filePath));
-    	} else if (uri.getScheme().equals("content")) {
-    		ContentResolver cr = this.getContentResolver();
-    		FileDescriptor fileDescriptor;
-			try {
-				fileDescriptor = cr.openFileDescriptor(uri, "r").getFileDescriptor();
-			} catch (FileNotFoundException e) {
-				throw new RuntimeException(e); // TODO: handle errors
-			}
-			return fileDescriptor.toString();
-    		//return new PDF(fileDescriptor);
-    	} else {
-    		throw new RuntimeException("don't know how to get filename from " + uri);
-    	}
     }
 }
