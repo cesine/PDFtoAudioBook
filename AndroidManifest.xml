@@ -10,6 +10,25 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+				<action android:name="android.intent.action.VIEW"></action>
+				<category android:name="android.intent.category.DEFAULT"></category>
+				<category android:name="android.intent.category.BROWSABLE"></category>
+				<data android:mimeType="application/pdf" android:scheme="file"></data>
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"></action>
+				<category android:name="android.intent.category.DEFAULT"></category>
+				<category android:name="android.intent.category.BROWSABLE"></category>
+				<data android:mimeType="application/pdf" android:scheme="content"></data>
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"></action>
+				<category android:name="android.intent.category.DEFAULT"></category>
+				<category android:name="android.intent.category.BROWSABLE"></category>
+				<data android:host="*" android:scheme="file"
+					android:pathPattern=".*\.pdf" />
+			</intent-filter>
         </activity>
         <provider 	android:name="ca.openlanguage.provider.DocumentProvider"
         			android:authorities="ca.openlanguage.provider.DocumentProvider"/>
