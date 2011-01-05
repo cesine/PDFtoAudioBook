@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical"
+    >
+	
+<TextView 
+	android:id="@+id/documentTitleLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Title:"
+	/>
+<EditText 
+	android:id="@+id/documentTitle"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex Theory of Pumpkins: an investigative study.pdf"
+	/>
+	
+<TextView 
+	android:id="@+id/documentAuthorLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Author(s):"
+	/>	
+<EditText 
+	android:id="@+id/documentAuthor"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex Bill Adams and Fred Miller"
+	/>
+	
+<TextView 
+	android:id="@+id/documentCitationsLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Possible Citations:"
+	/>
+<EditText 
+	android:id="@+id/documentCitations"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex (Adams 2000), (Adams and Miller 2000)"
+	/>
+	
+<TextView 
+	android:id="@+id/documentPublicationDateLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Publication Date(s):"
+	/>
+<EditText 
+	android:id="@+id/documentPublicationDate"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex 2000"
+	/>
+
+
+<TextView 
+	android:id="@+id/fileNameLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Filename:"
+	/>	
+<EditText 
+	android:id="@+id/fileNameText"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex Adams-2000-Theory of pumpkins.pdf"
+	/>
+
+<TextView 
+	android:id="@+id/filePathLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Full Path and Filename:"
+	/>	
+<EditText 
+	android:id="@+id/filePathText"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex /sdcard/path/to/Adams-2000-Theory of pumpkins.pdf"
+	/>
+
+	
+</LinearLayout>
+</ScrollView>

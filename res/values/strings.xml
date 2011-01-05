@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, PDFtoAudioBookHome!</string>
+    <string name="hello">PDFtoAudioBook Home</string>
     <string name="app_name">PDFtoAudioBook</string>
+    <string name="register_pdf_file_message">Add this PDF to AudioBooks</string>
 </resources>
