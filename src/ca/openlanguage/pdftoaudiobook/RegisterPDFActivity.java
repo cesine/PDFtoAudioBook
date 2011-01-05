@@ -9,11 +9,15 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class RegisterPDFActivity extends Activity {
+	
+	//private static final String TAG = "RegisterPDFActivity";
 	
 	private String filePath;
 	private String fileName;
@@ -24,6 +28,7 @@ public class RegisterPDFActivity extends Activity {
 	private EditText mDocCitationsEditText;
 	private EditText mDocPubDateEditText;
 	
+	private Button mSaveButton;
 	
     /** Called when the activity is first created. */
     @Override
@@ -35,10 +40,25 @@ public class RegisterPDFActivity extends Activity {
         getPDFFileNameAndPath();
         fillDocumentDetailsIntoForm();
 
-        
+        mSaveButton = (Button)findViewById(R.id.button_saveDocumentToDatabase);
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+        	public void onClick(View v){
+        		saveToDatabase();
+        	}
+        });
         //TextView message = (TextView)findViewById(R.id.message);
         //message.setText("hi");
     }
+    
+    private void saveToDatabase(){
+    	
+    	//TODO: insert a record in to the database
+    	
+    	Toast tellUserSavedDetails = Toast.makeText(this, 
+        		"The Document was saved into the database, next time you open it it will display these details.", Toast.LENGTH_LONG);
+        tellUserSavedDetails.show();
+    }
+    
     /**
      * Return file name and path.
      * @return string

@@ -10,7 +10,8 @@
     android:scrollbars="vertical"
     >
 
-<Button android:layout_width="wrap_content"
+<Button android:id="@+id/button_saveDocumentToDatabase"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="Save to AudioBooks"/>
 
