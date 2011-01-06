@@ -19,9 +19,10 @@ import android.widget.Toast;
 import ca.openlanguage.pdftoaudiobook.Text2Chunks;
 import ca.openlanguage.provider.DocumentProviderMetadata.DocumentTableMetadata;
 
-public class RegisterPDFActivity extends Activity {
+public class EditDocumentDetails extends Activity {
 	
 	//private static final String TAG = "RegisterPDFActivity";
+	private Uri mUri;
 	
 	private String fullPathAndFileName;
 	private String fileName;
@@ -94,8 +95,12 @@ public class RegisterPDFActivity extends Activity {
         values.put(DocumentTableMetadata.DOCUMENT_ADDED_DATE,System.currentTimeMillis());
         values.put(DocumentTableMetadata.DOCUMENT_CITATION,mDocCitationsEditText.getText().toString());
         
-       
-
+        try {
+            //getContentResolver().update(mUri, values, null, null);
+        } catch (NullPointerException e) {
+            //Log.e(TAG, e.getMessage());
+        }
+        
         
         
         //String actionName = " ca.openlanguage.pdftoaudiobook.intent.action.LIST_DOCUMENTS ";

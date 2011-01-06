@@ -13,6 +13,8 @@ public class DocumentProviderMetadata {
 
 	public static final String AUTHORITY = "ca.openlanguage.provider.Document";
 	
+
+	
 	public static final String DATABASE_NAME = "document.db";
 	public static final int DATABASE_VERSION = 1;
 	public static final String DOCUMENTS_TABLE_NAME = "documents";

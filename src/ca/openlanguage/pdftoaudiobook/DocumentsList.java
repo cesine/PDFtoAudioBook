@@ -4,9 +4,16 @@ package ca.openlanguage.pdftoaudiobook;
 
 
 
+import ca.openlanguage.provider.DocumentProvider;
+import ca.openlanguage.provider.DocumentProviderMetadata;
+import ca.openlanguage.provider.DocumentProviderMetadata.DocumentTableMetadata;
+
+
+
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListAdapter;
@@ -40,6 +47,7 @@ public class DocumentsList extends Activity {
         Toast tellUser = Toast.makeText(this, 
         		"The intent was "+intent.toString(), Toast.LENGTH_LONG);
         tellUser.show();
+        mTextView.setText("Opened the list activity.");
         
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             // handles a click on a search suggestion; launches activity to show word
@@ -49,13 +57,22 @@ public class DocumentsList extends Activity {
             displayResults();
 
         } 
-        mTextView.setText("Opened the list activity.");
+        
 
         
 	}
 	private String displayResults(){
 		
-		
+
+        Cursor cursor = managedQuery(DocumentTableMetadata.CONTENT_URI, null, null,
+                                new String[] {""}, null);
+
+        if (cursor == null) {
+            // There are no results
+            mTextView.setText("R.string.no_results");
+        }else{
+        	mTextView.setText("There were results");
+        }
 		return "displayed results";
 	}
 
