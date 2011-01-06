@@ -163,7 +163,7 @@ public class DocumentProvider extends ContentProvider {
 
 	
 	/*
-	 * Create a database
+	 * Create a database, taken from page 99, which was taken from the NotPad Sample code in v8
 	 */
 	
 	private DatabaseHelper mOpenHelper;
@@ -189,7 +189,7 @@ public class DocumentProvider extends ContentProvider {
 			onCreate(db);
 		
 		}
-	}
+	}//end databasehelper
 	
 	/* (non-Javadoc)
 	 * @see android.content.ContentProvider#onCreate()

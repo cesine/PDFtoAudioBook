@@ -84,6 +84,10 @@ public class RegisterPDFActivity extends Activity {
         		"The Document was saved into the database, next time you open it it will display these details.", Toast.LENGTH_LONG);
         tellUserSavedDetails.show();
         
+        //String actionName = " ca.openlanguage.pdftoaudiobook.intent.action.LIST_DOCUMENTS ";
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setType("vnd.android.cursor.dir/vnd.openlanguage.document");
+        startActivity(intent);
         
     }
     

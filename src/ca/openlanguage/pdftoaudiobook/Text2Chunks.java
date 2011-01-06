@@ -79,6 +79,9 @@ public class Text2Chunks extends Activity{
 
 	
 	public String chunkItCompletely(String splitOn){
+		if (true){
+			return "chunking turned off to save time";
+		}
 		 /*
 		 * Here is a brief summary of the recommended approach for handling expensive operations:
 
