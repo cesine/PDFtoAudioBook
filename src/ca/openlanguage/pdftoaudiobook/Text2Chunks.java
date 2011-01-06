@@ -152,7 +152,7 @@ public class Text2Chunks extends Activity{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		/*write the chunks out to file for examination
 		try {
 			FileWriter out = new FileWriter(mOutputFilePath+"/test.txt");
 			out.write(chunks.toString());
@@ -160,6 +160,7 @@ public class Text2Chunks extends Activity{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		*/
 		
 	  	// Tell the media scanner about the new file so that it is
         // immediately available to the user.

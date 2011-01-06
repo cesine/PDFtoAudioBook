@@ -40,6 +40,18 @@
 	android:layout_height="wrap_content"
 	android:hint="ex Bill Adams and Fred Miller"
 	/>
+<TextView 
+	android:id="@+id/documentClassifications"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Classification(s):"
+	/>	
+<EditText 
+	android:id="@+id/documentClassification"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex: Topic:biology, Register:academic, Topic:programming_languages, Register:blog "
+	/>
 	
 <TextView 
 	android:id="@+id/documentCitationsLabel"
@@ -66,7 +78,19 @@
 	android:layout_height="wrap_content"
 	android:hint="ex 2000"
 	/>
-
+	
+<TextView 
+	android:id="@+id/documentChunksLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Chunk(s):"
+	/>
+<EditText 
+	android:id="@+id/documentChunks"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="Section 1.1"
+	/>
 
 <TextView 
 	android:id="@+id/fileNameLabel"
@@ -93,6 +117,7 @@
 	android:layout_height="wrap_content"
 	android:hint="ex /sdcard/path/to/Adams-2000-Theory of pumpkins.pdf"
 	/>
+
 
 	
 </LinearLayout>

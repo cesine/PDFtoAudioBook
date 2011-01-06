@@ -28,6 +28,7 @@ public class RegisterPDFActivity extends Activity {
 	private EditText mDocAuthorEditText;
 	private EditText mDocCitationsEditText;
 	private EditText mDocPubDateEditText;
+	private EditText mDocChunksText;
 	
 	private Button mSaveButton;
 	
@@ -64,12 +65,15 @@ public class RegisterPDFActivity extends Activity {
         //sucessMessage =text2ChunksInstance.getChunkResults();
         
         //if chunkitcompletely is public to use a progress dialog
-        sucessMessage=text2ChunksInstance.chunkItCompletely("CHAPTEr");
+        sucessMessage=text2ChunksInstance.chunkItCompletely("\\d+\\.\\d+");
         
-        
+        mDocChunksText = (EditText)findViewById(R.id.documentChunks);
+        mDocChunksText.setText(sucessMessage);
+
         tellUserFileStreamResults = Toast.makeText(this, 
         		sucessMessage, Toast.LENGTH_LONG);
         tellUserFileStreamResults.show();
+        
     }
     
     private void saveToDatabase(){
@@ -79,6 +83,8 @@ public class RegisterPDFActivity extends Activity {
     	Toast tellUserSavedDetails = Toast.makeText(this, 
         		"The Document was saved into the database, next time you open it it will display these details.", Toast.LENGTH_LONG);
         tellUserSavedDetails.show();
+        
+        
     }
     
     /**

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical"
+    >
+
+<Button android:id="@+id/button_saveChunkToDatabase"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Save to Chunk Database"/>
+
+<TextView 
+	android:id="@+id/ChunkTitleLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Title:"
+	/>
+<EditText 
+	android:id="@+id/ChunkTitle"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex Section 1.1"
+	/>
+	
+<TextView 
+	android:id="@+id/ChunkTextLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Text:"
+	/>
+<EditText 
+	android:id="@+id/ChunkText"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex Section 1.1\n In this section we will provide a brief history of pumpkins and their squash cousins. The pumpkin was first documented in..."
+	/>
+
+	
+<TextView 
+	android:id="@+id/ChunkHistoryLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Chunk History:"
+	/>
+<EditText 
+	android:id="@+id/ChunkHistory"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex Created 20100101\nSection 1.1\n In this section we will provide a brief history of pumpkins and their squash cousins. 
+	The pumpkin was first documented in...\n\n
+	Edited 20100101:Section 1.1\n In this section we will provide a brief history of pumpkins, and their squash cousins. 
+	The pumpkin was first documented in..."
+	/>
+	
+<TextView 
+	android:id="@+id/ChunkCorrectionsLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Corrections:"
+	/>
+<EditText 
+	android:id="@+id/ChunkCorrections"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex (CHAPTEr->Chapter)"
+	/>
+	
+
+
+	
+</LinearLayout>
+</ScrollView>
