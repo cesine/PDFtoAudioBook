@@ -49,13 +49,24 @@ public class RegisterPDFActivity extends Activity {
         });
         
         //test Text2Chunks
-        Text2Chunks text2ChunksInstance = new Text2Chunks(fileName, fullPathAndFileName);
+        //Depends on: txt file being next to the pdf
+        Text2Chunks text2ChunksInstance = new Text2Chunks(this, fileName, fullPathAndFileName);
         String sucessMessage = text2ChunksInstance.openFileStreams();
         Toast tellUserFileStreamResults = Toast.makeText(this, 
         		sucessMessage, Toast.LENGTH_LONG);
         tellUserFileStreamResults.show();
         
-        sucessMessage = text2ChunksInstance.chunkIt("Chapter");
+        
+        //if doing chunkit in a thread to use a progress bar
+        //sucessMessage = "depreciated, use mResults instead";
+        //text2ChunksInstance.setSplitOn("CHAPTEr");
+        //text2ChunksInstance.chunkIt();
+        //sucessMessage =text2ChunksInstance.getChunkResults();
+        
+        //if chunkitcompletely is public to use a progress dialog
+        sucessMessage=text2ChunksInstance.chunkItCompletely("CHAPTEr");
+        
+        
         tellUserFileStreamResults = Toast.makeText(this, 
         		sucessMessage, Toast.LENGTH_LONG);
         tellUserFileStreamResults.show();
