@@ -14,12 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import ca.openlanguage.pdftoaudiobook.Text2Chunks;
 
 public class RegisterPDFActivity extends Activity {
 	
 	//private static final String TAG = "RegisterPDFActivity";
 	
-	private String filePath;
+	private String fullPathAndFileName;
 	private String fileName;
 	private EditText mFilePathEditText;
 	private EditText mFileNameEditText;
@@ -46,8 +47,18 @@ public class RegisterPDFActivity extends Activity {
         		saveToDatabase();
         	}
         });
-        //TextView message = (TextView)findViewById(R.id.message);
-        //message.setText("hi");
+        
+        //test Text2Chunks
+        Text2Chunks text2ChunksInstance = new Text2Chunks(fileName, fullPathAndFileName);
+        String sucessMessage = text2ChunksInstance.openFileStreams();
+        Toast tellUserFileStreamResults = Toast.makeText(this, 
+        		sucessMessage, Toast.LENGTH_LONG);
+        tellUserFileStreamResults.show();
+        
+        sucessMessage = text2ChunksInstance.chunkIt("Chapter");
+        tellUserFileStreamResults = Toast.makeText(this, 
+        		sucessMessage, Toast.LENGTH_LONG);
+        tellUserFileStreamResults.show();
     }
     
     private void saveToDatabase(){
@@ -66,14 +77,14 @@ public class RegisterPDFActivity extends Activity {
     private void getPDFFileNameAndPath() {
         final Intent intent = getIntent();
 		Uri uri = intent.getData();    	
-		filePath = uri.getPath().toString();
+		fullPathAndFileName = uri.getPath().toString();
 		
 		int lastPosition = uri.getPathSegments().size() - 1 ;
 		fileName = uri.getPathSegments().get(lastPosition);
 		
 		if (uri.getScheme().equals("file")) {
-			return ;//filePath;
-    		//return new PDF(new File(filePath));
+			return ;//fullPathAndFileName;
+    		//return new PDF(new File(fullPathAndFileName));
     	} else if (uri.getScheme().equals("content")) {
     		ContentResolver cr = this.getContentResolver();
     		FileDescriptor fileDescriptor;
@@ -83,7 +94,7 @@ public class RegisterPDFActivity extends Activity {
 				throw new RuntimeException(e); // TODO: handle errors
 			}
 			fileName = "Unknown - 2010 - Unknown.pdf";
-			filePath = "Unknown - 2010 - Unknown.pdf";//fileDescriptor.toString();
+			fullPathAndFileName = "Unknown - 2010 - Unknown.pdf";//fileDescriptor.toString();
 			return ;//fileDescriptor.toString();
     		//return new PDF(fileDescriptor);
     	} else {
@@ -93,7 +104,7 @@ public class RegisterPDFActivity extends Activity {
     private void fillDocumentDetailsIntoForm(){
     	
         mFilePathEditText = (EditText)findViewById(R.id.filePathText);
-        mFilePathEditText.setText(filePath, TextView.BufferType.EDITABLE);
+        mFilePathEditText.setText(fullPathAndFileName, TextView.BufferType.EDITABLE);
         mFileNameEditText = (EditText)findViewById(R.id.fileNameText);
         mFileNameEditText.setText(fileName, TextView.BufferType.EDITABLE);
         
