@@ -6,10 +6,7 @@
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
         <activity android:name=".PDFtoAudioBookHome"
                   android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity 	android:name=".RegisterPDFActivity"
             		android:label="@string/register_pdf_file_message">
@@ -52,6 +49,22 @@
             </intent-filter>
         </activity>
     
+    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.ChunksActivity"
+    			android:label="ChunksActivity">
+    	</activity>
+    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsActivity"
+    			android:label="DocumentsActivity">
+    	</activity>	
+    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsEditDetailActivity"
+    			android:label="Documents Edit Detail Activity">		
+    	</activity>	
+    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.ChunksEditDetailActivity"
+    			android:label="Chunks Edit Detail Activity">	
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>  			
+    	</activity>
 </application>
     <uses-sdk android:minSdkVersion="8" />
 

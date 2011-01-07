@@ -200,7 +200,7 @@ public class DocumentProvider extends ContentProvider {
 		return true;
 	}
 	
-	
+ 
 
 	/**
 	 * Checks the uri for two types of queries, either return all the rows of the table, or return the row matching the id (passed in on the end of the uri)
