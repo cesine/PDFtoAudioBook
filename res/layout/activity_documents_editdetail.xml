@@ -20,19 +20,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onSaveClick"
-            android:text="save" />
+            android:text="Save" />
         <Button
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onDiscardClick"
-            android:text="discard" />
+            android:text="Discard" />
     </LinearLayout>
 
-<Button android:id="@+id/button_saveDocumentToDatabase"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="Save to AudioBooks"/>
+
 
 <TextView 
 	android:id="@+id/documentTitleLabel"
