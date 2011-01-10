@@ -1,10 +1,13 @@
-/**
- * 
- */
-package ca.openlanguage.provider;
+package ca.openlanguage.pdftoaudiobook.provider;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+
+import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryContract.Documents;
+import ca.openlanguage.provider.DocumentProviderMetadata;
+import ca.openlanguage.provider.DocumentProviderMetadata.DocumentTableMetadata;
+
+import com.google.android.apps.iosched.util.SelectionBuilder;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -13,23 +16,12 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
-import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryContract;
-import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase;
 
-import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryContract.Documents;
-import ca.openlanguage.provider.DocumentProviderMetadata.DocumentTableMetadata;
-
-import com.google.android.apps.iosched.util.SelectionBuilder;
-/**
- * @author gina
- *
- */
-public class DocumentProvider extends ContentProvider {
+public class TestContentPovider extends ContentProvider {
 	private static final String TAG = "DocumentProvider";
 	private static final boolean LOGV = Log.isLoggable(TAG, Log.VERBOSE);
 	
@@ -321,3 +313,6 @@ public class DocumentProvider extends ContentProvider {
 	}
 
 }
+
+
+

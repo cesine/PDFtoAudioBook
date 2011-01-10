@@ -82,6 +82,7 @@ public class DocumentsEditDetailActivity extends Activity implements AsyncQueryL
         /*
          * prepare and execute instructions from the intents/uri
          */
+        
         final String action = getIntent().getAction();
         if (Intent.ACTION_EDIT.equals(action) && savedInstanceState == null) {
             // Start background query to load current state
