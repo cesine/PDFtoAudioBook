@@ -4,8 +4,9 @@ import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.util.StringTokenizer;
 
+import ca.openlanguage.pdftoaudiobook.R;
+import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryProvider;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -17,13 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import ca.openlanguage.pdftoaudiobook.R;
-import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryContract.Documents;
 
-import com.google.android.apps.iosched.util.NotifyingAsyncQueryHandler;
-import com.google.android.apps.iosched.util.NotifyingAsyncQueryHandler.AsyncQueryListener;
 
-public class DocumentsEditDetailActivity extends Activity implements AsyncQueryListener{
+public class DocumentsEditDetailActivity extends Activity{
 
 //private static final String TAG = "RegisterPDFActivity";
 	
@@ -39,7 +36,7 @@ public class DocumentsEditDetailActivity extends Activity implements AsyncQueryL
 	
 	private Button mSaveButton;
 	
-	private NotifyingAsyncQueryHandler mHandler;
+	private Uri mUri;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,18 +74,18 @@ public class DocumentsEditDetailActivity extends Activity implements AsyncQueryL
          * This pattern can be used to perform background queries without leaking
          * {@link Context} objects.
          */
-        mHandler = new NotifyingAsyncQueryHandler(getContentResolver(), this);
+        //mHandler = new NotifyingAsyncQueryHandler(getContentResolver(), this);
         
         /*
          * prepare and execute instructions from the intents/uri
          */
         
-        final String action = getIntent().getAction();
-        if (Intent.ACTION_EDIT.equals(action) && savedInstanceState == null) {
-            // Start background query to load current state
-            final Uri documentUri = getIntent().getData();
-            mHandler.startQuery(documentUri, DocumentsQuery.PROJECTION);
-        }
+//        final String action = getIntent().getAction();
+//        if (Intent.ACTION_EDIT.equals(action) && savedInstanceState == null) {
+//            // Start background query to load current state
+//            final Uri documentUri = getIntent().getData();
+//            //mHandler.startQuery(documentUri, DocumentsQuery.PROJECTION);
+        //}
         
 
         
@@ -171,62 +168,21 @@ public class DocumentsEditDetailActivity extends Activity implements AsyncQueryL
     }
     */
     public void onSaveClick(View v){
-    	saveContent();
+    	
     }
     public void saveContent(){
-    	final String documentContent = mDocTitleEditText.getText().toString();
+    	//check data and insert it 
     	
-    	//TODO: consider passing it off to a startSerivice() to prevent the process from being killed
-    	//eg by an incoming call before actually perserving the document
-    	
-    	//when empty title treat it as a discard, add code here
-    	
-    	final ContentValues values = new ContentValues();
-    	values.put(Documents.DOCUMENT_TITLE,"test title");
-    	values.put(Documents.DOCUMENT_AUTHOR, "test author");
-    	//etc
-    	
-    	final String action = getIntent().getAction();
-    	//if its an insert, set the document added time, otherwise just save it using update
-    	if (Intent.ACTION_INSERT.equals(action)){
-    		values.put(Documents.DOCUMENT_ADDED_TIME, System.currentTimeMillis());
-    	
-    		final Uri documentsDirUri = getIntent().getData();
-    		//here is the connection to the database, via a handler, via a content resolver, via a provider using the Contract about data constants set out in AudioBookLibraryContract, formerly the metadata from hashimi book
-    		/*
-    		 * more info about the startInsert and startUpdate are wrapped in the NotifyingAsyncQueryHandler in the utils package, and documneted in the asyncqueryhandler in the android documenation
-    		 * an asyncqueryhandler takes a conentresolver in its constructor
-    		 */
-    		mHandler.startInsert(documentsDirUri, values);
-    	}else if (Intent.ACTION_EDIT.equals(action)){
-    		final Uri documentUri = getIntent().getData();
-    		mHandler.startUpdate(documentUri, values);
-    	}
-    	finish();
+
     }
     
     /**
      * onQueryComplete is required by the AsyrconousQueryListener
      */
 	public void onQueryComplete(int token, Object cookie, Cursor cursor) {
-        try {
-            if (!cursor.moveToFirst()) return;
-
-            // Load current note content for editing
-           mDocTitleEditText.setText(cursor.getString(DocumentsQuery.DOCUMENT_TITLE));
-
-        } finally {
-            cursor.close();
-        }
+  
     }
     /** {@link Notes} query parameters. */
     private interface DocumentsQuery {
-        String[] PROJECTION = {
-                Documents.DOCUMENT_ADDED_TIME,
-                Documents.DOCUMENT_TITLE,
-        };
-
-        int DOCUMENT_ADDED_TIME = 0;
-        int DOCUMENT_TITLE = 1;
     }
 }

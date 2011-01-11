@@ -30,38 +30,58 @@
 					android:pathPattern=".*\.pdf" />
 			</intent-filter>
         </activity>
-        <provider 	android:name="ca.openlanguage.provider.DocumentProvider"
-        			android:authorities="ca.openlanguage.pdftoaudiobook"/>
 
 
     
     	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.ChunksActivity"
     			android:label="ChunksActivity">
+    	    <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.chunk" />
+            </intent-filter>
     	</activity>
     	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsActivity"
     			android:label="DocumentsActivity">
-    	</activity>	
-    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsEditDetailActivity"
-    			android:label="Documents Edit Detail Activity">		
     		<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter> 
-            <intent-filter>
-                <action android:name="android.intent.action.INSERT" />
+    	    <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.document" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.document" />
             </intent-filter>
+         </activity>	
+         
+    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsEditDetailActivity"
+    			android:label="Documents Edit Detail Activity"
+    			>		
+
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="ca.openlanguage.pdftoaudiobook.action.EDIT_DOCUMENT_DETAILS" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.openlanguage.document" />
-            </intent-filter>             
+                <data android:mimeType="vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.document" />
+            </intent-filter>              
     	</activity>	
+    	
     	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.ChunksEditDetailActivity"
     			android:label="Chunks Edit Detail Activity">	
-			
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="ca.openlanguage.pdftoaudiobook.action.EDIT_CHUNK_DETAILS" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.chunk" />
+            </intent-filter> 
     	</activity>
+    	
+
+        <provider android:name=".provider.AudioBookLibraryProvider"
+                  android:authorities="ca.openlanguage.pdftoaudiobook.AudiobookLibraryProvider" />
+    	
     
 </application>
     <uses-sdk android:minSdkVersion="8" />
