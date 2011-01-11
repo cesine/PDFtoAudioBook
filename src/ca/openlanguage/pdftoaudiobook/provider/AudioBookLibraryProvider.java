@@ -87,6 +87,7 @@ public class AudioBookLibraryProvider extends ContentProvider {
 
         case NOTE_ID:
             qb.setProjectionMap(sNotesProjectionMap);
+            //get the row (of selected columns in projetion, it should be all of them) for that ID
             qb.appendWhere(NoteColumns._ID + "=" + uri.getPathSegments().get(1));
             break;
 
@@ -210,6 +211,9 @@ public class AudioBookLibraryProvider extends ContentProvider {
 
         case NOTE_ID:
             String noteId = uri.getPathSegments().get(1);
+            //update teh row using the values provided
+            //this takes updates from the title editor
+            //this takes updates from the notes editor
             count = db.update(NOTES_TABLE_NAME, values, NoteColumns._ID + "=" + noteId
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
             break;

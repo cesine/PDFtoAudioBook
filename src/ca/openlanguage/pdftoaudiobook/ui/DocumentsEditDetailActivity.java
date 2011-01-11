@@ -100,7 +100,7 @@ public class DocumentsEditDetailActivity extends Activity{
             // Requested to insert: set that state, and create a new entry
             // in the container.
             mState = STATE_INSERT;
-            //this causes teh table/folder to get built
+            //this is run when add note is called, prior to an data being entered.
             mUri = getContentResolver().insert(intent.getData(), null);
 
             // If we were unable to create a new note, then just finish
@@ -114,6 +114,7 @@ public class DocumentsEditDetailActivity extends Activity{
 
             // The new entry was created, so assume all will end well and
             // set the result to be returned.
+            //The result can then be filled in by the application into a full note
             setResult(RESULT_OK, (new Intent()).setAction(mUri.toString()));
 
         } else {

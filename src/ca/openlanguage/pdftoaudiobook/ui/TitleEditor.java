@@ -86,6 +86,7 @@ import ca.openlanguage.pdftoaudiobook.R;
 	            // Write the title back to the note 
 	            ContentValues values = new ContentValues();
 	            values.put(NoteColumns.TITLE, mText.getText().toString());
+	            //this sends the content of the title to the be updated in the datbase
 	            getContentResolver().update(mUri, values, null, null);
 	        }
 	    }

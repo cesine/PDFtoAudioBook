@@ -86,7 +86,7 @@
     	
     	
         <activity android:name="ca.openlanguage.pdftoaudiobook.ui.TitleEditor"
-            android:label="Title editors title"
+            android:label="Edit Title"
             android:theme="@android:style/Theme.Dialog"
             android:icon="@drawable/ic_menu_edit"
             android:windowSoftInputMode="stateVisible">
@@ -94,7 +94,7 @@
                  performed on notes: editing their title.  It can be used as
                  a default operation if the user invokes this action, and is
                  available as an alternative action for any note data. -->
-            <intent-filter android:label="Resolve_title">
+            <intent-filter android:label="Edit Title"><!-- used for display in long click context menu -->
                 <!-- This is the action we perform.  It is a custom action we
                      define for our application, not a generic VIEW or EDIT
                      action since we are not a general note viewer/editor. -->
