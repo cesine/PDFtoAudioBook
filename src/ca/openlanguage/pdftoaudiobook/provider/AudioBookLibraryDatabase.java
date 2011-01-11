@@ -1,74 +1,67 @@
 package ca.openlanguage.pdftoaudiobook.provider;
 
-
-
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 
 
+
+
 public class AudioBookLibraryDatabase {
-	public static String AUTHORITY = "ca.openlanguage.pdftoaudiobook.AudiobookLibraryProvider";
-    
-
-    private static final String TAG = "AudioBookLibraryDatabase";
-
+    public static final String AUTHORITY = "ca.openlanguage.pdftoaudiobook.provider.AudiobookLibrary";
 
     // This class cannot be instantiated
-    private AudioBookLibraryDatabase() {
-		// TODO Auto-generated constructor stub
-	}
+    private AudioBookLibraryDatabase() {}
     
     /**
-     * Documents table
+     * Notes table
      */
-    public static final class DocumentColumns implements BaseColumns {
+    public static final class NoteColumns implements BaseColumns {
         // This class cannot be instantiated
-        private DocumentColumns() {}
+        private NoteColumns() {}
 
         /**
          * The content:// style URL for this table
          */
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/documents");
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/notes");
 
         /**
-         * The MIME type of {@link #CONTENT_URI} providing a directory of documents.
+         * The MIME type of {@link #CONTENT_URI} providing a directory of notes.
          */
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.document";
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.note";
 
         /**
-         * The MIME type of a {@link #CONTENT_URI} sub-directory of a single document.
+         * The MIME type of a {@link #CONTENT_URI} sub-directory of a single note.
          */
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.document";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.note";
 
         /**
          * The default sort order for this table
          */
-        public static final String DEFAULT_SORT_ORDER = "title DESC";
+        public static final String DEFAULT_SORT_ORDER = "modified DESC";
 
         /**
-         * The title of the document
+         * The title of the note
          * <P>Type: TEXT</P>
          */
         public static final String TITLE = "title";
 
         /**
-         * The document itself
+         * The note itself
          * <P>Type: TEXT</P>
          */
-        public static final String DOCUMENT = "document";
+        public static final String NOTE = "note";
 
         /**
-         * The timestamp for when the document was created
+         * The timestamp for when the note was created
          * <P>Type: INTEGER (long from System.curentTimeMillis())</P>
          */
         public static final String CREATED_DATE = "created";
 
         /**
-         * The timestamp for when the document was last modified
+         * The timestamp for when the note was last modified
          * <P>Type: INTEGER (long from System.curentTimeMillis())</P>
          */
         public static final String MODIFIED_DATE = "modified";
     }
-
 }

@@ -3,4 +3,11 @@
     <string name="hello">PDFtoAudioBook Home</string>
     <string name="app_name">PDFtoAudioBook</string>
     <string name="register_pdf_file_message">Add this PDF to AudioBooks</string>
+    <string name="title_edit">Title Edit</string>
+    <string name="title_create">Title Create</string>
+    <string name="error_title">Error title</string>
+    <string name="error_message">Error message</string>
+    
+    
+    <string name="live_folder_name">AudioBooks</string>
 </resources>

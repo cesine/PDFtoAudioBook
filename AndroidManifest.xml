@@ -50,21 +50,27 @@
     	    <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.document" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.note" />
             </intent-filter>
          </activity>	
          
     	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsEditDetailActivity"
     			android:label="Documents Edit Detail Activity"
     			>		
-
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="ca.openlanguage.pdftoaudiobook.action.EDIT_DOCUMENT_DETAILS" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.document" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.note" />
             </intent-filter>              
+                        <!-- This filter says that we can create a new note inside
+                 of a directory of notes. -->
+            <intent-filter>
+                <action android:name="android.intent.action.INSERT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.note" />
+            </intent-filter>
     	</activity>	
     	
     	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.ChunksEditDetailActivity"
@@ -78,9 +84,46 @@
             </intent-filter> 
     	</activity>
     	
+    	
+        <activity android:name="ca.openlanguage.pdftoaudiobook.ui.TitleEditor"
+            android:label="Title editors title"
+            android:theme="@android:style/Theme.Dialog"
+            android:icon="@drawable/ic_menu_edit"
+            android:windowSoftInputMode="stateVisible">
+            <!-- This activity implements an alternative action that can be
+                 performed on notes: editing their title.  It can be used as
+                 a default operation if the user invokes this action, and is
+                 available as an alternative action for any note data. -->
+            <intent-filter android:label="Resolve_title">
+                <!-- This is the action we perform.  It is a custom action we
+                     define for our application, not a generic VIEW or EDIT
+                     action since we are not a general note viewer/editor. -->
+                <action android:name="com.android.notepad.action.EDIT_TITLE" />
+                <!-- DEFAULT: execute if being directly invoked. -->
+                <category android:name="android.intent.category.DEFAULT" />
+                <!-- ALTERNATIVE: show as an alternative action when the user is
+                     working with this type of data. -->
+                <category android:name="android.intent.category.ALTERNATIVE" />
+                <!-- SELECTED_ALTERNATIVE: show as an alternative action the user
+                     can perform when selecting this type of data. -->
+                <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
+                <!-- This is the data type we operate on. -->
+                <data android:mimeType="vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.note" />
+            </intent-filter>
+        </activity>
+
+    	
+    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.AudioBooksLiveFolder" 
+    		android:label="@string/live_folder_name"
+            android:icon="@drawable/live_folder_notes">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_LIVE_FOLDER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <provider android:name=".provider.AudioBookLibraryProvider"
-                  android:authorities="ca.openlanguage.pdftoaudiobook.AudiobookLibraryProvider" />
+                  android:authorities="ca.openlanguage.pdftoaudiobook.provider.AudiobookLibrary" />
     	
     
 </application>
