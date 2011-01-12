@@ -14,52 +14,69 @@ public class AudioBookLibraryDatabase {
     private AudioBookLibraryDatabase() {}
     
     /**
-     * Notes table
+     * audiobooks table
      */
-    public static final class NoteColumns implements BaseColumns {
+    public static final class AudiobookColumns implements BaseColumns {
         // This class cannot be instantiated
-        private NoteColumns() {}
+        private AudiobookColumns() {}
 
         /**
          * The content:// style URL for this table
          */
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/notes");
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/audiobooks");
 
         /**
-         * The MIME type of {@link #CONTENT_URI} providing a directory of notes.
+         * The MIME type of {@link #CONTENT_URI} providing a directory of audiobooks.
          */
-        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.note";
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.audiobook";
 
         /**
-         * The MIME type of a {@link #CONTENT_URI} sub-directory of a single note.
+         * The MIME type of a {@link #CONTENT_URI} sub-directory of a single audiobook.
          */
-        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.note";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.audiobook";
 
         /**
          * The default sort order for this table
          */
         public static final String DEFAULT_SORT_ORDER = "modified DESC";
+    	
+		/** string type "Intensional Semantics" */
+		public static final String TITLE = "title";
+		/** string type "Kai von Fintel, Irene Heim"*/
+		public static final String AUTHOR = "author";
+		/** string type, convert to list of strings later, "(von Fintel 2004), (von Fintel and Heim)"*/
+		public static final String CITATION = "citations";
+		/** string type, convert to list of strings later, "(von Fintel 2004), (von Fintel and Heim)"*/
+		public static final String CLASSIFICATION = "classifications";
+		/** String with possibly multiple publication dates 2002, Spring 2002, 2004, 2007*/
+		public static final String PUBLICATION_DATE ="docpubdate";
+		/** Integer type from System.currentTimeMillis(), used for ordering documents and expiring old audio files?*/
+		public static final String LAST_LISTENED_TIME = "timelastlistenedto";
+		/** String of chunks for this document*/
+		public static final String CHUNKS = "chunks";
+		/** String*/
+		public static final String FILENAME = "filename";
+		/** String, TODO should probably be a URI*/
+		public static final String FULL_FILEPATH_AND_FILENAME ="fullpathandfilename";
+		/** String TODO should probably be a URI*/
+		public static final String THUMBNAIL = "thumbnail";
+		/** String */
+		public static final String STARRED= "starrred";
 
         /**
-         * The title of the note
+         * The audiobook itself
          * <P>Type: TEXT</P>
          */
-        public static final String TITLE = "title";
+        public static final String AUDIOBOOK = "audiobook";
 
         /**
-         * The note itself
-         * <P>Type: TEXT</P>
-         */
-        public static final String NOTE = "note";
-
-        /**
-         * The timestamp for when the note was created
+         * The timestamp for when the audiobook was created
          * <P>Type: INTEGER (long from System.curentTimeMillis())</P>
          */
         public static final String CREATED_DATE = "created";
 
         /**
-         * The timestamp for when the note was last modified
+         * The timestamp for when the audiobook was last modified
          * <P>Type: INTEGER (long from System.curentTimeMillis())</P>
          */
         public static final String MODIFIED_DATE = "modified";

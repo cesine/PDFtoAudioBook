@@ -17,23 +17,23 @@ import android.net.Uri;
 import android.provider.LiveFolders;
 import android.text.TextUtils;
 import android.util.Log;
-import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.NoteColumns;
+import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.AudiobookColumns;
 
 
 public class AudioBookLibraryProvider extends ContentProvider {
 
-    private static final String TAG = "NotePadProvider";
+    private static final String TAG = "AudiobookPadProvider";
 
-    private static final String DATABASE_NAME = "notepad.db";
+    private static final String DATABASE_NAME = "audiobookpad.db";
     private static final int DATABASE_VERSION = 2;
-    private static final String NOTES_TABLE_NAME = "notes";
+    private static final String AUDIOBOOKS_TABLE_NAME = "audiobooks";
 
-    private static HashMap<String, String> sNotesProjectionMap;
+    private static HashMap<String, String> sAudiobooksProjectionMap;
     private static HashMap<String, String> sLiveFolderProjectionMap;
 
-    private static final int NOTES = 1;
-    private static final int NOTE_ID = 2;
-    private static final int LIVE_FOLDER_NOTES = 3;
+    private static final int AUDIOBOOKS = 1;
+    private static final int AUDIOBOOK_ID = 2;
+    private static final int LIVE_FOLDER_AUDIOBOOKS = 3;
 
     private static final UriMatcher sUriMatcher;
 
@@ -48,12 +48,23 @@ public class AudioBookLibraryProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE " + NOTES_TABLE_NAME + " ("
-                    + NoteColumns._ID + " INTEGER PRIMARY KEY,"
-                    + NoteColumns.TITLE + " TEXT,"
-                    + NoteColumns.NOTE + " TEXT,"
-                    + NoteColumns.CREATED_DATE + " INTEGER,"
-                    + NoteColumns.MODIFIED_DATE + " INTEGER"
+            db.execSQL("CREATE TABLE " + AUDIOBOOKS_TABLE_NAME + " ("
+                    + AudiobookColumns._ID + " INTEGER PRIMARY KEY,"
+                    + AudiobookColumns.TITLE + " TEXT,"
+                    + AudiobookColumns.AUTHOR + " TEXT,"
+                    + AudiobookColumns.CITATION + " TEXT,"
+                    + AudiobookColumns.CLASSIFICATION + " TEXT,"
+                    + AudiobookColumns.CHUNKS+ " TEXT,"
+                    + AudiobookColumns.LAST_LISTENED_TIME + " TEXT,"
+                    + AudiobookColumns.FILENAME + " TEXT,"
+                    + AudiobookColumns.FULL_FILEPATH_AND_FILENAME + " TEXT,"
+                    + AudiobookColumns.PUBLICATION_DATE + " TEXT,"
+                    + AudiobookColumns.THUMBNAIL + " TEXT,"
+                    + AudiobookColumns.STARRED + " TEXT,"
+                    
+                    + AudiobookColumns.AUDIOBOOK + " TEXT,"
+                    + AudiobookColumns.CREATED_DATE + " INTEGER,"
+                    + AudiobookColumns.MODIFIED_DATE + " INTEGER"
                     + ");");
         }
 
@@ -61,7 +72,7 @@ public class AudioBookLibraryProvider extends ContentProvider {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS notes");
+            db.execSQL("DROP TABLE IF EXISTS audiobooks");
             onCreate(db);
         }
     }//end databasehelper
@@ -78,20 +89,23 @@ public class AudioBookLibraryProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
             String sortOrder) {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        qb.setTables(NOTES_TABLE_NAME);
+        qb.setTables(AUDIOBOOKS_TABLE_NAME);
 
         switch (sUriMatcher.match(uri)) {
-        case NOTES:
-            qb.setProjectionMap(sNotesProjectionMap);
+        case AUDIOBOOKS:
+        	//gets a cursor of all rows, with all columns (all should be entered into the projectionmap)
+            qb.setProjectionMap(sAudiobooksProjectionMap);
             break;
 
-        case NOTE_ID:
-            qb.setProjectionMap(sNotesProjectionMap);
+        case AUDIOBOOK_ID:
+            qb.setProjectionMap(sAudiobooksProjectionMap);
             //get the row (of selected columns in projetion, it should be all of them) for that ID
-            qb.appendWhere(NoteColumns._ID + "=" + uri.getPathSegments().get(1));
+            //gets a cursor of the row which matches the id from the uri
+            qb.appendWhere(AudiobookColumns._ID + "=" + uri.getPathSegments().get(1));
             break;
 
-        case LIVE_FOLDER_NOTES:
+        case LIVE_FOLDER_AUDIOBOOKS:
+        	//gets a cursor of all rows, but with just a few columns
             qb.setProjectionMap(sLiveFolderProjectionMap);
             break;
 
@@ -102,7 +116,7 @@ public class AudioBookLibraryProvider extends ContentProvider {
         // If no sort order is specified use the default
         String orderBy;
         if (TextUtils.isEmpty(sortOrder)) {
-            orderBy = NoteColumns.DEFAULT_SORT_ORDER;
+            orderBy = AudiobookColumns.DEFAULT_SORT_ORDER;
         } else {
             orderBy = sortOrder;
         }
@@ -119,12 +133,12 @@ public class AudioBookLibraryProvider extends ContentProvider {
     @Override
     public String getType(Uri uri) {
         switch (sUriMatcher.match(uri)) {
-        case NOTES:
-        case LIVE_FOLDER_NOTES:
-            return NoteColumns.CONTENT_TYPE;
+        case AUDIOBOOKS:
+        case LIVE_FOLDER_AUDIOBOOKS:
+            return AudiobookColumns.CONTENT_TYPE;
 
-        case NOTE_ID:
-            return NoteColumns.CONTENT_ITEM_TYPE;
+        case AUDIOBOOK_ID:
+            return AudiobookColumns.CONTENT_ITEM_TYPE;
 
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
@@ -133,8 +147,11 @@ public class AudioBookLibraryProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues initialValues) {
+    	//initial values are null
+    	
+    	
         // Validate the requested uri
-        if (sUriMatcher.match(uri) != NOTES) {
+        if (sUriMatcher.match(uri) != AUDIOBOOKS) {
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
 
@@ -148,30 +165,70 @@ public class AudioBookLibraryProvider extends ContentProvider {
         Long now = Long.valueOf(System.currentTimeMillis());
 
         // Make sure that the fields are all set
-        if (values.containsKey(NoteColumns.CREATED_DATE) == false) {
-            values.put(NoteColumns.CREATED_DATE, now);
+        
+        if (values.containsKey(AudiobookColumns.CREATED_DATE) == false) {
+            values.put(AudiobookColumns.CREATED_DATE, now);
         }
 
-        if (values.containsKey(NoteColumns.MODIFIED_DATE) == false) {
-            values.put(NoteColumns.MODIFIED_DATE, now);
+        if (values.containsKey(AudiobookColumns.MODIFIED_DATE) == false) {
+            values.put(AudiobookColumns.MODIFIED_DATE, now);
         }
 
-        if (values.containsKey(NoteColumns.TITLE) == false) {
+        if (values.containsKey(AudiobookColumns.TITLE) == false) {
             Resources r = Resources.getSystem();
-            values.put(NoteColumns.TITLE, r.getString(android.R.string.untitled));
+            values.put(AudiobookColumns.TITLE, r.getString(android.R.string.untitled));
         }
 
-        if (values.containsKey(NoteColumns.NOTE) == false) {
-            values.put(NoteColumns.NOTE, "");
+      // initialize nullable fields here
+        if (values.containsKey(AudiobookColumns.AUDIOBOOK) == false) {
+            values.put(AudiobookColumns.AUDIOBOOK, "");
         }
+        if (values.containsKey(AudiobookColumns.AUTHOR) == false) {
+            values.put(AudiobookColumns.AUTHOR, "");
+        }
+        if (values.containsKey(AudiobookColumns.CITATION) == false) {
+            values.put(AudiobookColumns.CITATION, "");
+        }
+        if (values.containsKey(AudiobookColumns.CLASSIFICATION) == false) {
+            values.put(AudiobookColumns.CLASSIFICATION, "");
+        }
+        if (values.containsKey(AudiobookColumns.CHUNKS) == false) {
+            values.put(AudiobookColumns.CHUNKS, "");
+        }
+        if (values.containsKey(AudiobookColumns.LAST_LISTENED_TIME) == false) {
+            values.put(AudiobookColumns.LAST_LISTENED_TIME, "");
+        }
+        if (values.containsKey(AudiobookColumns.FILENAME) == false) {
+            values.put(AudiobookColumns.FILENAME, "");
+        }
+        if (values.containsKey(AudiobookColumns.FULL_FILEPATH_AND_FILENAME) == false) {
+            values.put(AudiobookColumns.FULL_FILEPATH_AND_FILENAME, "");
+        }
+        if (values.containsKey(AudiobookColumns.THUMBNAIL) == false) {
+            values.put(AudiobookColumns.THUMBNAIL, "");
+        }
+        if (values.containsKey(AudiobookColumns.STARRED) == false) {
+            values.put(AudiobookColumns.STARRED, "");
+        }
+        if (values.containsKey(AudiobookColumns.PUBLICATION_DATE) == false) {
+            values.put(AudiobookColumns.PUBLICATION_DATE, "");
+        }
+        
+        
+        
+        
+        
+        
+        
+        
 
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        
-        long rowId = db.insert(NOTES_TABLE_NAME, NoteColumns.NOTE, values);
+        //values contains title=<untitled> created=1294758635956 audiobook= modified=1294758635956
+        long rowId = db.insert(AUDIOBOOKS_TABLE_NAME, AudiobookColumns.AUDIOBOOK, values);
         if (rowId > 0) {
-            Uri noteUri = ContentUris.withAppendedId(NoteColumns.CONTENT_URI, rowId);
-            getContext().getContentResolver().notifyChange(noteUri, null);
-            return noteUri;
+            Uri audiobookUri = ContentUris.withAppendedId(AudiobookColumns.CONTENT_URI, rowId);
+            getContext().getContentResolver().notifyChange(audiobookUri, null);
+            return audiobookUri;
         }
 
         throw new SQLException("Failed to insert row into " + uri);
@@ -182,13 +239,13 @@ public class AudioBookLibraryProvider extends ContentProvider {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int count;
         switch (sUriMatcher.match(uri)) {
-        case NOTES:
-            count = db.delete(NOTES_TABLE_NAME, where, whereArgs);
+        case AUDIOBOOKS:
+            count = db.delete(AUDIOBOOKS_TABLE_NAME, where, whereArgs);
             break;
 
-        case NOTE_ID:
-            String noteId = uri.getPathSegments().get(1);
-            count = db.delete(NOTES_TABLE_NAME, NoteColumns._ID + "=" + noteId
+        case AUDIOBOOK_ID:
+            String audiobookId = uri.getPathSegments().get(1);
+            count = db.delete(AUDIOBOOKS_TABLE_NAME, AudiobookColumns._ID + "=" + audiobookId
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
             break;
 
@@ -205,16 +262,16 @@ public class AudioBookLibraryProvider extends ContentProvider {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int count;
         switch (sUriMatcher.match(uri)) {
-        case NOTES:
-            count = db.update(NOTES_TABLE_NAME, values, where, whereArgs);
+        case AUDIOBOOKS:
+            count = db.update(AUDIOBOOKS_TABLE_NAME, values, where, whereArgs);
             break;
 
-        case NOTE_ID:
-            String noteId = uri.getPathSegments().get(1);
+        case AUDIOBOOK_ID:
+            String audiobookId = uri.getPathSegments().get(1);
             //update teh row using the values provided
             //this takes updates from the title editor
-            //this takes updates from the notes editor
-            count = db.update(NOTES_TABLE_NAME, values, NoteColumns._ID + "=" + noteId
+            //this takes updates from the audiobooks editor
+            count = db.update(AUDIOBOOKS_TABLE_NAME, values, AudiobookColumns._ID + "=" + audiobookId
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
             break;
 
@@ -228,22 +285,40 @@ public class AudioBookLibraryProvider extends ContentProvider {
 
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        sUriMatcher.addURI(AudioBookLibraryDatabase.AUTHORITY, "notes", NOTES);
-        sUriMatcher.addURI(AudioBookLibraryDatabase.AUTHORITY, "notes/#", NOTE_ID);
-        sUriMatcher.addURI(AudioBookLibraryDatabase.AUTHORITY, "live_folders/notes", LIVE_FOLDER_NOTES);
+        sUriMatcher.addURI(AudioBookLibraryDatabase.AUTHORITY, "audiobooks", AUDIOBOOKS);
+        sUriMatcher.addURI(AudioBookLibraryDatabase.AUTHORITY, "audiobooks/#", AUDIOBOOK_ID);
+        sUriMatcher.addURI(AudioBookLibraryDatabase.AUTHORITY, "live_folders/audiobooks", LIVE_FOLDER_AUDIOBOOKS);
 
-        sNotesProjectionMap = new HashMap<String, String>();
-        sNotesProjectionMap.put(NoteColumns._ID, NoteColumns._ID);
-        sNotesProjectionMap.put(NoteColumns.TITLE, NoteColumns.TITLE);
-        sNotesProjectionMap.put(NoteColumns.NOTE, NoteColumns.NOTE);
-        sNotesProjectionMap.put(NoteColumns.CREATED_DATE, NoteColumns.CREATED_DATE);
-        sNotesProjectionMap.put(NoteColumns.MODIFIED_DATE, NoteColumns.MODIFIED_DATE);
+        sAudiobooksProjectionMap = new HashMap<String, String>();
+        sAudiobooksProjectionMap.put(AudiobookColumns._ID, AudiobookColumns._ID);
+        
+        sAudiobooksProjectionMap.put(AudiobookColumns.TITLE, AudiobookColumns.TITLE);
+        sAudiobooksProjectionMap.put(AudiobookColumns.AUTHOR, AudiobookColumns.AUTHOR);
+        sAudiobooksProjectionMap.put(AudiobookColumns.CITATION, AudiobookColumns.CITATION);
+        sAudiobooksProjectionMap.put(AudiobookColumns.CLASSIFICATION, AudiobookColumns.CLASSIFICATION);
+        sAudiobooksProjectionMap.put(AudiobookColumns.PUBLICATION_DATE, AudiobookColumns.PUBLICATION_DATE);
+        sAudiobooksProjectionMap.put(AudiobookColumns.LAST_LISTENED_TIME, AudiobookColumns.LAST_LISTENED_TIME);
+        sAudiobooksProjectionMap.put(AudiobookColumns.CHUNKS, AudiobookColumns.CHUNKS);
+        sAudiobooksProjectionMap.put(AudiobookColumns.FILENAME, AudiobookColumns.FILENAME);
+        sAudiobooksProjectionMap.put(AudiobookColumns.FULL_FILEPATH_AND_FILENAME, AudiobookColumns.FULL_FILEPATH_AND_FILENAME);
+        sAudiobooksProjectionMap.put(AudiobookColumns.THUMBNAIL, AudiobookColumns.THUMBNAIL);
+        sAudiobooksProjectionMap.put(AudiobookColumns.STARRED, AudiobookColumns.STARRED);
+
+             
+        
+        
+
+        
+        
+        sAudiobooksProjectionMap.put(AudiobookColumns.AUDIOBOOK, AudiobookColumns.AUDIOBOOK);
+        sAudiobooksProjectionMap.put(AudiobookColumns.CREATED_DATE, AudiobookColumns.CREATED_DATE);
+        sAudiobooksProjectionMap.put(AudiobookColumns.MODIFIED_DATE, AudiobookColumns.MODIFIED_DATE);
 
         // Support for Live Folders.
         sLiveFolderProjectionMap = new HashMap<String, String>();
-        sLiveFolderProjectionMap.put(LiveFolders._ID, NoteColumns._ID + " AS " +
+        sLiveFolderProjectionMap.put(LiveFolders._ID, AudiobookColumns._ID + " AS " +
                 LiveFolders._ID);
-        sLiveFolderProjectionMap.put(LiveFolders.NAME, NoteColumns.TITLE + " AS " +
+        sLiveFolderProjectionMap.put(LiveFolders.NAME, AudiobookColumns.TITLE + " AS " +
                 LiveFolders.NAME);
         // Add more columns here for more robust Live Folders.
     }

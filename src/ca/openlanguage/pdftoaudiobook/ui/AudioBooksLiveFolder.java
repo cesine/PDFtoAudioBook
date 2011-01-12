@@ -13,13 +13,13 @@ import android.provider.LiveFolders;
 public class AudioBooksLiveFolder extends Activity {
 
     /**
-     * The URI for the Notes Live Folder content provider.
+     * The URI for the audiobooks Live Folder content provider.
      */
     public static final Uri CONTENT_URI = Uri.parse("content://"
-            + AudioBookLibraryDatabase.AUTHORITY + "/live_folders/notes");
+            + AudioBookLibraryDatabase.AUTHORITY + "/live_folders/audiobooks");
 
-    public static final Uri NOTE_URI = Uri.parse("content://"
-            + AudioBookLibraryDatabase.AUTHORITY + "/notes/#");
+    public static final Uri AUDIOBOOK_URI = Uri.parse("content://"
+            + AudioBookLibraryDatabase.AUTHORITY + "/audiobooks/#");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +37,11 @@ public class AudioBooksLiveFolder extends Activity {
                     getString(R.string.live_folder_name));
             liveFolderIntent.putExtra(LiveFolders.EXTRA_LIVE_FOLDER_ICON,
                     Intent.ShortcutIconResource.fromContext(this,
-                            R.drawable.live_folder_notes));
+                            R.drawable.live_folder_audiobooks));
             liveFolderIntent.putExtra(LiveFolders.EXTRA_LIVE_FOLDER_DISPLAY_MODE,
                     LiveFolders.DISPLAY_MODE_LIST);
             liveFolderIntent.putExtra(LiveFolders.EXTRA_LIVE_FOLDER_BASE_INTENT,
-                    new Intent(Intent.ACTION_EDIT, NOTE_URI));
+                    new Intent(Intent.ACTION_EDIT, AUDIOBOOK_URI));
 
             // The result of this activity should be a live folder intent.
             setResult(RESULT_OK, liveFolderIntent);

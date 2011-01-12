@@ -10,29 +10,29 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.NoteColumns;
+import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.AudiobookColumns;
 import ca.openlanguage.pdftoaudiobook.R;
 
 
 	public class TitleEditor extends Activity implements View.OnClickListener {
 
 	    /**
-	     * This is a special intent action that means "edit the title of a note".
+	     * This is a special intent action that means "edit the title of a Audiobook".
 	     */
-	    public static final String EDIT_TITLE_ACTION = "com.android.notepad.action.EDIT_TITLE";
+	    public static final String EDIT_TITLE_ACTION = "ca.openlanguage.pdftoaudiobook.action.EDIT_TITLE";
 
 	    /**
 	     * An array of the columns we are interested in.
 	     */
 	    private static final String[] PROJECTION = new String[] {
-	        NoteColumns._ID, // 0
-	        NoteColumns.TITLE, // 1
+	        AudiobookColumns._ID, // 0
+	        AudiobookColumns.TITLE, // 1
 	    };
-	    /** Index of the title column */
+	    /** Index of the title column, that is all that is needed for this activity */
 	    private static final int COLUMN_INDEX_TITLE = 1;
 
 	    /**
-	     * Cursor which will provide access to the note whose title we are editing.
+	     * Cursor which will provide access to the Audiobook whose title we are editing.
 	     */
 	    private Cursor mCursor;
 
@@ -43,7 +43,7 @@ import ca.openlanguage.pdftoaudiobook.R;
 	    private EditText mText;
 
 	    /**
-	     * The content URI to the note that's being edited.
+	     * The content URI to the Audiobook that's being edited.
 	     */
 	    private Uri mUri;
 
@@ -53,10 +53,10 @@ import ca.openlanguage.pdftoaudiobook.R;
 
 	        setContentView(R.layout.title_editor);
 
-	        // Get the uri of the note whose title we want to edit
+	        // Get the uri of the Audiobook whose title we want to edit
 	        mUri = getIntent().getData();
 
-	        // Get a cursor to access the note
+	        // Get a cursor to access the Audiobook
 	        mCursor = managedQuery(mUri, PROJECTION, null, null, null);
 
 	        // Set up click handlers for the text field and button
@@ -83,10 +83,10 @@ import ca.openlanguage.pdftoaudiobook.R;
 	        super.onPause();
 
 	        if (mCursor != null) {
-	            // Write the title back to the note 
+	            // Write the title back to the audiobook 
 	            ContentValues values = new ContentValues();
-	            values.put(NoteColumns.TITLE, mText.getText().toString());
-	            //this sends the content of the title to the be updated in the datbase
+	            values.put(AudiobookColumns.TITLE, mText.getText().toString());
+	            //this sends the content of the title to the be updated in the database
 	            getContentResolver().update(mUri, values, null, null);
 	        }
 	    }

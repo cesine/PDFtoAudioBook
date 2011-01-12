@@ -18,18 +18,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import ca.openlanguage.pdftoaudiobook.R;
-import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.NoteColumns;
+import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.AudiobookColumns;
 
 
 public class DocumentsActivity extends ListActivity {
-    private static final String TAG = "NotesList";
+    private static final String TAG = "AudiobooksList";
 
     /**
-     * The columns we are interested in from the database
+     * The columns we are interested in from the database, Only displaying titles and keeping track
+     * of their IDs, but other useful info such as their starred values could be added later
      */
     private static final String[] PROJECTION = new String[] {
-        NoteColumns._ID, // 0
-        NoteColumns.TITLE, // 1
+        AudiobookColumns._ID, // 0
+        AudiobookColumns.TITLE, // 1
+        
     };
 
     /** The index of the title column */
@@ -45,7 +47,7 @@ public class DocumentsActivity extends ListActivity {
         // as a MAIN activity), then use our default content provider.
         Intent intent = getIntent();
         if (intent.getData() == null) {
-            intent.setData(NoteColumns.CONTENT_URI);
+            intent.setData(AudiobookColumns.CONTENT_URI);
         }
 
         // Inform the list we provide context menus for items
@@ -54,11 +56,11 @@ public class DocumentsActivity extends ListActivity {
         // Perform a managed query. The Activity will handle closing and requerying the cursor
         // when needed.
         Cursor cursor = managedQuery(getIntent().getData(), PROJECTION, null, null,
-                                        NoteColumns.DEFAULT_SORT_ORDER);
+                                        AudiobookColumns.DEFAULT_SORT_ORDER);
 
-        // Used to map notes entries from the database to views
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.noteslist_item, cursor,
-                new String[] { NoteColumns.TITLE }, new int[] { android.R.id.text1 });
+        // Used to map Audiobooks entries from the database to views
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.audiobookslist_item, cursor,
+                new String[] { AudiobookColumns.TITLE }, new int[] { android.R.id.text1 });
         setListAdapter(adapter);
     }
 
@@ -143,16 +145,16 @@ public class DocumentsActivity extends ListActivity {
             return false;
         }
         
-        Uri noteUri = ContentUris.withAppendedId(getIntent().getData(), info.id);
+        Uri audiobookUri = ContentUris.withAppendedId(getIntent().getData(), info.id);
 
         switch (item.getItemId()) {
         case R.id.context_open:
             // Launch activity to view/edit the currently selected item
-            startActivity(new Intent(Intent.ACTION_EDIT, noteUri));
+            startActivity(new Intent(Intent.ACTION_EDIT, audiobookUri));
             return true;
         case R.id.context_delete:
-            // Delete the note that the context menu is for
-            getContentResolver().delete(noteUri, null, null);
+            // Delete the audiobook that the context menu is for
+            getContentResolver().delete(audiobookUri, null, null);
             return true;
         default:
             return super.onContextItemSelected(item);
@@ -161,16 +163,16 @@ public class DocumentsActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        Uri noteUri = ContentUris.withAppendedId(getIntent().getData(), id);
+        Uri audiobookUri = ContentUris.withAppendedId(getIntent().getData(), id);
         
         String action = getIntent().getAction();
         if (Intent.ACTION_PICK.equals(action) || Intent.ACTION_GET_CONTENT.equals(action)) {
-            // The caller is waiting for us to return a note selected by
+            // The caller is waiting for us to return a audiobook selected by
             // the user.  The have clicked on one, so return it now.
-            setResult(RESULT_OK, new Intent().setData(noteUri));
+            setResult(RESULT_OK, new Intent().setData(audiobookUri));
         } else {
             // Launch activity to view/edit the currently selected item
-            startActivity(new Intent(Intent.ACTION_EDIT, noteUri));
+            startActivity(new Intent(Intent.ACTION_EDIT, audiobookUri));
         }
     }
 }
