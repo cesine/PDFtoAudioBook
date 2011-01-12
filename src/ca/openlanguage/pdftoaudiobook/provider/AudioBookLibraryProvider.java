@@ -193,7 +193,7 @@ public class AudioBookLibraryProvider extends ContentProvider {
             values.put(AudiobookColumns.CLASSIFICATION, "");
         }
         if (values.containsKey(AudiobookColumns.CHUNKS) == false) {
-            values.put(AudiobookColumns.CHUNKS, "");
+            values.put(AudiobookColumns.CHUNKS, "Section");
         }
         if (values.containsKey(AudiobookColumns.LAST_LISTENED_TIME) == false) {
             values.put(AudiobookColumns.LAST_LISTENED_TIME, "");

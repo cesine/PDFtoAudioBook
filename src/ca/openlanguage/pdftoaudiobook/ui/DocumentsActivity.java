@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 import ca.openlanguage.pdftoaudiobook.R;
 import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.AudiobookColumns;
 
@@ -31,11 +32,18 @@ public class DocumentsActivity extends ListActivity {
     private static final String[] PROJECTION = new String[] {
         AudiobookColumns._ID, // 0
         AudiobookColumns.TITLE, // 1
+        AudiobookColumns.FULL_FILEPATH_AND_FILENAME,//2
+        AudiobookColumns.FILENAME,//3
+        AudiobookColumns.CHUNKS,//4
+        
         
     };
 
     /** The index of the title column */
     private static final int COLUMN_INDEX_TITLE = 1;
+    private static final int COLUMN_INDEX_FULLFILEPATH_AND_NAME = 2;
+    private static final int COLUMN_INDEX_FILENAME = 3;
+    private static final int COLUMN_INDEX_CHUNK_SPLITON = 4;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +164,21 @@ public class DocumentsActivity extends ListActivity {
         case R.id.context_delete:
             // Delete the audiobook that the context menu is for
             getContentResolver().delete(audiobookUri, null, null);
+            return true;
+        case R.id.context_generate:
+            // Launch the chunks activity but tell it that it should use this Audiobook's id
+        	String actionToGenerateChunks="ca.openlanguage.pdftoaudiobook.action.GENERATE_CHUNKS";
+        	Intent tempIntent= new Intent(actionToGenerateChunks);//new Intent(this, ChunksActivity.class);
+        	Cursor cursor = (Cursor) getListAdapter().getItem(info.position);
+        	tempIntent.putExtra(AudiobookColumns.FULL_FILEPATH_AND_FILENAME, cursor.getString(COLUMN_INDEX_FULLFILEPATH_AND_NAME));
+        	tempIntent.putExtra(AudiobookColumns.FILENAME, cursor.getString(COLUMN_INDEX_FILENAME));
+        	tempIntent.putExtra(AudiobookColumns.CHUNKS, cursor.getString(COLUMN_INDEX_CHUNK_SPLITON));
+        	//Uri uriForThisAudioBook = AudiobookColumns.CONTENT_URI;
+        	//tempIntent.setData(uriForThisAudioBook);
+        	Toast tellUser = Toast.makeText(this, 
+            		"Generating chunks for: "+ cursor.getString(COLUMN_INDEX_FILENAME)+" at "+ cursor.getString(COLUMN_INDEX_FULLFILEPATH_AND_NAME) +"\n\n This may take a while depending on the pdf", Toast.LENGTH_LONG);
+            tellUser.show();
+        	startActivity(tempIntent);
             return true;
         default:
             return super.onContextItemSelected(item);

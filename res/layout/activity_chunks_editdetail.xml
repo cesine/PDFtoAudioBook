@@ -20,19 +20,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onSaveClick"
-            android:text="save" />
+            android:text="Save" />
         <Button
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onDiscardClick"
-            android:text="discard" />
+            android:text="Discard" />
     </LinearLayout>
 
-<Button android:id="@+id/button_saveChunkToDatabase"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="Save to Chunk Database"/>
 
 <TextView 
 	android:id="@+id/ChunkTitleLabel"
@@ -89,6 +85,90 @@
 	android:layout_height="wrap_content"
 	android:hint="ex (CHAPTEr->Chapter)"
 	/>
+	
+<TextView 
+	android:id="@+id/ChunkListenedToDateLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Last listened to:"
+	/>
+<EditText 
+	android:id="@+id/ChunkListenedToDate"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex 2000-01-01"
+	/>
+	
+	<TextView 
+	android:id="@+id/audiobookClassificationLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Last Generated:"
+	/>	
+<EditText 
+	android:id="@+id/ChunkGeneratedDate"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex 2000-01-01"
+	/>
+<TextView 
+	android:id="@+id/audiobookTitleLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="AudioBook's Title:"
+	/>
+<EditText 
+	android:id="@+id/audiobookTitle"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex Theory of Pumpkins: an investigative study"
+	/>
+	
+	
+
+	
+<TextView 
+	android:id="@+id/tasknotesLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="TODOs, Tasks, Notes:"
+	/>	
+<EditText 
+	android:id="@+id/tasknotes"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint=""
+	/>	
+	
+	
+
+
+<TextView 
+	android:id="@+id/audiobookfileNameLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Audiobook's Filename:"
+	/>	
+<EditText 
+	android:id="@+id/audiobookFileName"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex Adams-2000-Theory of pumpkins.pdf"
+	/>
+
+<TextView 
+	android:id="@+id/audiobookfilePathLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Chunk's Full Path and Filename:"
+	/>	
+<EditText 
+	android:id="@+id/ChunkFullFilePathandFileName"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex /sdcard/Music/Adams-2000-Theory of pumpkins/Section3.1-Adams-2000-Theory of pumpkins.mp3"
+	/>
+
 	
 
 

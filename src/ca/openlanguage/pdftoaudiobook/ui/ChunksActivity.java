@@ -1,12 +1,27 @@
 package ca.openlanguage.pdftoaudiobook.ui;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ComponentName;
 import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -15,15 +30,66 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 import ca.openlanguage.pdftoaudiobook.R;
+import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.AudiobookColumns;
 import ca.openlanguage.pdftoaudiobook.provider.ChunkDatabase.ChunkColumns;
 
 
-public class ChunksActivity extends ListActivity {
+public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitListener{
     private static final String TAG = "chunksList";
+    private Boolean mRegisterChunks = false;
+    private String mFileName;
+    private String mOriginalFileNameAndPath;
 
+	String mSplitOn;
+	String mResults;
+	Context mParentContext;
+	
+	
+	File mOutputFilePath;
+	BufferedReader mOriginalFile;
+	
+	LinkedHashMap<String,String> chunks = new LinkedHashMap();
+
+	/** Talk to the user */
+    private TextToSpeech mTts;
+
+    
+    
+  //implement on Init for the text to speech
+	public void onInit(int status) {
+		if (status == TextToSpeech.SUCCESS) {
+			// Set preferred language to US english.
+			// Note that a language may not be available, and the result will
+			// indicate this.
+			int result = mTts.setLanguage(Locale.US);
+			// Try this someday for some interesting results.
+			// int result mTts.setLanguage(Locale.FRANCE);
+			if (result == TextToSpeech.LANG_MISSING_DATA
+					|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
+				// Language data is missing or the language is not supported.
+				Log.e(TAG, "Language is not available.");
+			} else {
+
+				// mSpeakButton.setEnabled(true);
+				// mPauseButton.setEnabled(true);
+				// Greet the user.
+				// sayHello();
+			}
+		} else {
+			// Initialization failed.
+			Log.e(TAG, "Could not initialize TextToSpeech.");
+		}
+	}
+
+    
+    
+    
+    
     /**
      * The columns we are interested in from the database, Only displaying titles and keeping track
      * of their IDs, but other useful info such as their starred values could be added later
@@ -31,26 +97,87 @@ public class ChunksActivity extends ListActivity {
     private static final String[] PROJECTION = new String[] {
         ChunkColumns._ID, // 0
         ChunkColumns.TITLE, // 1
-        
+        ChunkColumns.CHUNKS, //2
     };
 
     /** The index of the title column */
     private static final int COLUMN_INDEX_TITLE = 1;
+    private static final int COLUMN_INDEX_CHUNKTEXT = 2 ;
+    
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mTts = new TextToSpeech(this, this);
         setTitle("Registered Chunks in this AudioBook");
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 
-        // If no data was given in the intent (because we were started
-        // as a MAIN activity), then use our default content provider.
+        
+
         Intent intent = getIntent();
+        
+
+
+       
+       // If no data was given in the intent (because we were started
+       // as a MAIN activity), then use our default content provider.
         if (intent.getData() == null) {
             intent.setData(ChunkColumns.CONTENT_URI);
         }
 
+        String action = intent.getAction();
+        
+        String actionToGenerateChunks="ca.openlanguage.pdftoaudiobook.action.GENERATE_CHUNKS";
+    	if (actionToGenerateChunks.equals(action)){
+    		Bundle extras = intent.getExtras();
+    		mOriginalFileNameAndPath =  extras.getString(AudiobookColumns.FULL_FILEPATH_AND_FILENAME).replace(".pdf",".txt");
+    		mFileName = extras.getString(AudiobookColumns.FILENAME);
+    		mRegisterChunks = true;
+    		Toast tellUser = Toast.makeText(this, 
+            		"Generating chunks for: "+ mFileName+" at "+ mOriginalFileNameAndPath +"\n\n This may take a while depending on the pdf", Toast.LENGTH_LONG);
+            tellUser.show();
+            
+            
+            String sucessMessage = openFileStreams();
+            tellUser = Toast.makeText(this, 
+            		sucessMessage, Toast.LENGTH_LONG);
+            //tellUser.show();
+            mParentContext= this;
+            
+            
+            
+            mSplitOn = extras.getString(AudiobookColumns.CHUNKS);
+            String digitSections = "\\d+\\.\\d+"; //3.4, 12.22 etc
+            sucessMessage=chunkItCompletely(mSplitOn);
+            tellUser = Toast.makeText(mParentContext, 
+              		sucessMessage, Toast.LENGTH_LONG);
+            tellUser.show();
+
+            if (chunks.size() >0){
+            	String chunkTitle;
+            	String chunkText;
+            	//for each chunk in the chunk hashmap
+            	Iterator iteratorForChunks = chunks.keySet().iterator();
+            	while (iteratorForChunks.hasNext()){
+            		chunkTitle = (String)iteratorForChunks.next();
+            		chunkText = (String)chunks.get(chunkTitle);
+            		
+            		ContentValues values = new ContentValues();
+                	values.put(ChunkColumns.TITLE, chunkTitle);
+                	values.put(ChunkColumns.CHUNKS, chunkText);
+                	Uri uriUnusedJustToInsert = getContentResolver().insert(ChunkColumns.CONTENT_URI, values);
+            	}
+            	
+            	
+            }//end if there are chunks
+             
+
+            
+
+    	}//end if to generate chunks
+       
+        
+        
         // Inform the list we provide context menus for items
         getListView().setOnCreateContextMenuListener(this);
         
@@ -178,9 +305,183 @@ public class ChunksActivity extends ListActivity {
     }
 
     public void onGenerateClick(View v){
+    	  
     	
+          mTts.speak("I will make this audio file for you, please wait.",
+      	        TextToSpeech.QUEUE_ADD, 
+      	        null);
     }
     public void onPlayClick(View v){
-    	
+    	 
+          mTts.speak("I will play this chunk of the Audiobook.",
+      	        TextToSpeech.QUEUE_ADD,  
+      	        null);
     }
+    
+    public String openFileStreams(){
+		String message="";
+		/*
+		 * Accessing the SDCARD
+		 */
+		boolean externalStorageAvailable = false;
+		boolean externalStorageWriteable = false;
+		String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            // We can read and write the media
+            externalStorageAvailable = externalStorageWriteable = true;
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            // We can only read the media
+            externalStorageAvailable = true;
+            externalStorageWriteable = false;
+        } else {
+            // Something else is wrong. It may be one of many other states, but all we need
+            //  to know is we can neither read nor write
+            externalStorageAvailable = externalStorageWriteable = false;
+
+        	Toast tellUserSDCARDproblem = Toast.makeText(this, 
+            		"The SDCARD is unavailible, please try again later.\n\n Is the phone attached to a computer?", Toast.LENGTH_LONG);
+            tellUserSDCARDproblem.show();
+            message ="The SDCARD is unavailible, please try again later.\n\n Is the phone attached to a computer?";
+        }
+
+        /*
+         * Open and set the file stream for the original text file
+         */
+        if (externalStorageAvailable == true ){
+        	//text =" The External Storage is Readable. ";
+        	try {
+    			mOriginalFile = new BufferedReader(new FileReader(mOriginalFileNameAndPath));
+    		} catch (FileNotFoundException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    		message+="\nFile path for original is okay. \n";
+        }
+        
+		/*
+		 * Open and create the file path for the output directory in the music folder
+		 * 
+		 * Location: Music folder
+		 * Convention: remove .pdf or .txt from the filename, and replaces spaces" " by underscores"_"
+		 * 
+		 * usage of the mOutputFilePath:
+		 * //File file = new File (mOutputFilePath, "Chapter_13.wav");
+		 */
+        if (externalStorageWriteable == true ){
+        	//text =" The External Storage is Writable. ";
+        	String directoryName = mFileName.replace(".pdf", "");
+        	directoryName = directoryName.replace(".txt", "");
+        	directoryName = directoryName.replaceAll(" ", "_");
+        	mOutputFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC+"/"+directoryName+"/");
+            mOutputFilePath.mkdirs();     
+            message+="\nFile path for output is okay (it's in the Music directory). \n";
+        }
+       
+		return message;
+	}
+    public String chunkItCompletely(String splitOn){
+		if (false){
+			return "chunking turned off to save time";
+		}
+		 /*
+		 * Here is a brief summary of the recommended approach for handling expensive operations:
+
+				Create a Handler object in your UI thread
+				Spawn off worker threads to perform any required expensive operations
+				Post results from a worker thread back to the UI thread's handler either through a Runnable or a Message
+				Update the views on the UI thread as needed
+		 */
+		
+		/*
+		 * ProgressDialog progressBar;
+		progressBar = ProgressDialog.show(mParentsContext,
+				"Dividing the file into sections", "please wait....", true);
+		 */
+		
+		/*
+		new Thread() {
+			public void run() {
+				try {
+					// just doing some long operation
+					sleep(5000);
+				} catch (Exception e) {
+				}
+				handler.sendEmptyMessage(0);
+			}
+		}.start();
+		
+		
+		progressBar.dismiss();
+		*/
+		
+		String chunkString = "";
+		
+		String lineBreak ="\n";
+		String chunkName = "00preface";
+		//chunks.put(chunkName, chunkString);
+		
+		String message="";
+		
+		
+		String line;
+		try {
+			while ((line = mOriginalFile.readLine()) != null) {
+				/*
+				 * If the line matches the split regex: 
+				 * 	1 Put the chunk into the HashMap
+				 *  2 Reset chunk contents, either 
+				 *  	-make a new file out or
+				 * 		-clear the string
+				 */
+				
+				if (line.trim().startsWith(mSplitOn) ) {
+					chunks.put(chunkName, chunkString);
+					//Toast tellUser = Toast.makeText(mParentsContext, 
+		            //		"The Chunk Name: "+chunkName+":\n\n"+chunkString, Toast.LENGTH_LONG);
+		            //tellUser.show();
+		            
+					chunkString = "";
+					chunkName = line.trim().replaceAll(" ", "_");
+					message = message + chunkName + lineBreak;
+				}
+				/*
+				 * Add the line to the chunk, 
+				 * 	either by writing out to the file or // out.append(line);
+				 * 	adding it to the string
+				 */
+				
+				chunkString = chunkString + line + lineBreak;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*write the chunks out to file for examination
+		try {
+			FileWriter out = new FileWriter(mOutputFilePath+"/test.txt");
+			out.write(chunks.toString());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		*/
+		
+	  	// Tell the media scanner about the new file so that it is
+        // immediately available to the user.
+    	/*
+		MediaScannerConnection.scanFile(this,
+                new String[] { mOutputFilePath+"/text.txt"}, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+            public void onScanCompleted(String path, Uri uri) {
+                Log.i("ExternalStorage", "Scanned " + path + ":");
+                Log.i("ExternalStorage", "-> uri=" + uri);
+            }
+        });
+        */
+			
+		//progressBar.dismiss();
+		
+        return "Chunked on "+splitOn+" the result is: \n\n"+chunks.size()+" chunks.\n  "+message;
+	}
+
 }

@@ -55,6 +55,34 @@
 	android:layout_height="wrap_content"
 	android:hint="ex Bill Adams and Fred Miller"
 	/>
+	
+<TextView 
+	android:id="@+id/audiobookChunksLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Regex to break AudioBook into chunks:"
+	/>
+<EditText 
+	android:id="@+id/audiobookChunks"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="Section \d"
+	/>
+
+	
+<TextView 
+	android:id="@+id/tasknotesLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Preview of text:"
+	/>	
+<EditText 
+	android:id="@+id/tasknotes"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="Section 1.1\n In this section we will provide a brief history of pumpkins and their squash cousins. The pumpkin was first documented in..."
+	/>	
+	
 <TextView 
 	android:id="@+id/audiobookClassificationLabel"
 	android:layout_width="fill_parent"
@@ -65,22 +93,8 @@
 	android:id="@+id/audiobookClassification"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
-	android:hint="ex: Topic:biology, Register:academic, Topic:programming_languages, Register:blog "
+	android:hint="ex: Topic:biology, \nRegister:academic, \nTopic:programming_languages, \nRegister:blog "
 	/>
-	
-<TextView 
-	android:id="@+id/tasknotesLabel"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:text="TODOs, Tasks, Notes:"
-	/>	
-<EditText 
-	android:id="@+id/tasknotes"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:hint="Read sections 3.4 and write a quick summary"
-	/>	
-	
 <TextView 
 	android:id="@+id/audiobookCitationsLabel"
 	android:layout_width="fill_parent"
@@ -107,18 +121,7 @@
 	android:hint="ex 2000"
 	/>
 	
-<TextView 
-	android:id="@+id/audiobookChunksLabel"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:text="Chunk(s):"
-	/>
-<EditText 
-	android:id="@+id/audiobookChunks"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	android:hint="Section 1.1"
-	/>
+
 
 <TextView 
 	android:id="@+id/audiobookfileNameLabel"

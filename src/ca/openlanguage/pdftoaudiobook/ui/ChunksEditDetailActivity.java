@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.StringTokenizer;
 
 import ca.openlanguage.pdftoaudiobook.R;
+import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.AudiobookColumns;
 import ca.openlanguage.pdftoaudiobook.provider.ChunkDatabase.ChunkColumns;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -175,14 +176,14 @@ public class ChunksEditDetailActivity extends Activity {
         // Do some setup based on the action being performed.
          String action = intent.getAction();
          Uri dataUri = intent.getData();
-         Uri dataUriToTriggerNewChunk = ChunkColumns.CONTENT_URI;
+         Uri dataUriToTriggerNewChunk = AudiobookColumns.CONTENT_URI;
          mRegisterPDF = false;
         
         Toast tellUser = Toast.makeText(this, 
         		"The data in the uri is: "+dataUri.toString(), Toast.LENGTH_LONG);
-        //tellUser.show();
+        tellUser.show();
         
-        if( dataUri.toString().startsWith("file://") ){
+        if( dataUri.toString().startsWith(dataUriToTriggerNewChunk.toString()) ){
         	//register a pdf
         	mRegisterPDF = true;
         	action=Intent.ACTION_INSERT;
@@ -227,21 +228,21 @@ public class ChunksEditDetailActivity extends Activity {
         }
 
         // Set the layout for this activity.  You can find it in res/layout/audiobook_editor.xml
-        setContentView(R.layout.activity_audiobooks_editdetail);
+        setContentView(R.layout.activity_chunks_editdetail);
         
         //chunkt view for our chunk, identified by its ID in the XML file.
         mTaskNotesEditText = (EditText) findViewById(R.id.tasknotes);
         
         
-        mTitleEditText = (EditText) findViewById(R.id.audiobookTitle);
-        mAuthorEditText = (EditText) findViewById(R.id.audiobookAuthor);
-        mCitationEditText = (EditText) findViewById(R.id.audiobookCitations);
-        mClassificationEditText = (EditText) findViewById(R.id.audiobookClassification);
-        mPubDateEditText = (EditText) findViewById(R.id.audiobookPublicationDate);
+        mTitleEditText = (EditText) findViewById(R.id.ChunkTitle);
+        mAuthorEditText = (EditText) findViewById(R.id.ChunkCorrections);
+        mCitationEditText = (EditText) findViewById(R.id.ChunkHistory);
+        mClassificationEditText = (EditText) findViewById(R.id.ChunkListenedToDate);
+        mPubDateEditText = (EditText) findViewById(R.id.ChunkGeneratedDate);
         //mLastListenedTimeEditText;
-        mChunksEditText = (EditText) findViewById(R.id.audiobookChunks);
+        mChunksEditText = (EditText) findViewById(R.id.ChunkText);
         mFileNameEditText = (EditText) findViewById(R.id.audiobookFileName);
-        mFullFilePathAndFileNameEditText = (EditText) findViewById(R.id.audiobookFullFilePathandFileName);
+        mFullFilePathAndFileNameEditText = (EditText) findViewById(R.id.ChunkFullFilePathandFileName);
         //mThumbnailEditText;
         //mStarredEditText;
 

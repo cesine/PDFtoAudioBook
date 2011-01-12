@@ -25,6 +25,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.chunk" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="ca.openlanguage.pdftoaudiobook.action.GENERATE_CHUNKS" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <!-- <data android:mimeType="vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.audiobook" /> -->
+            </intent-filter>
     	</activity>
     	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsActivity"
     			android:label="DocumentsActivity">

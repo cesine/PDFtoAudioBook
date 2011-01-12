@@ -4,4 +4,6 @@
           android:title="Open" />
     <item android:id="@+id/context_delete"
           android:title="Delete" />
+    <item android:id="@+id/context_generate"
+    	  android:title="Divide into chunks for Audio Files" />
 </menu>

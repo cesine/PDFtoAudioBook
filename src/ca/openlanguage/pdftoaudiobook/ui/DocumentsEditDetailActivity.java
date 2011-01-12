@@ -329,7 +329,7 @@ public class DocumentsEditDetailActivity extends Activity{
                 Resources res = getResources();
                 setTitle("Editing "+title);//title of activity
             } else if (mState == STATE_INSERT) {
-                setTitle("In the Insert state"); //title of activity
+                setTitle("Creating a new AudioBook"); //title of activity
             }
 
             // This is a little tricky: we may be resumed after previously being
