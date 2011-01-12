@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    
     >
     <TextView
         android:id="@android:id/text1"
@@ -10,6 +11,7 @@
         android:layout_height="0dip"
         android:layout_weight="1"
         android:maxLines="2"
+        android:background="#333"
         android:ellipsize="end"
          />
     <TextView
@@ -19,5 +21,7 @@
         android:paddingTop="2dip"
         android:gravity="right"
         android:singleLine="true"
+        android:background="#555"
+        android:text="2011-01-01"
          />
 </LinearLayout>

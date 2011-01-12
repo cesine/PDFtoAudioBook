@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical"
+    >
+
+<LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        style="@android:style/ButtonBar">
+        <Button
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onSaveClick"
+            android:text="Save" />
+        <Button
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onDiscardClick"
+            android:text="Discard" />
+    </LinearLayout>
+
+<TextView 
+	android:id="@+id/audiobookTitleLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Title:"
+	/>
+<EditText 
+	android:id="@+id/audiobookTitle"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex Theory of Pumpkins: an investigative study"
+	/>
+	
+	
+<TextView 
+	android:id="@+id/audiobookAuthorLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Author(s):"
+	/>	
+<EditText 
+	android:id="@+id/audiobookAuthor"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex Bill Adams and Fred Miller"
+	/>
+<TextView 
+	android:id="@+id/audiobookClassificationLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Classification(s):"
+	/>	
+<EditText 
+	android:id="@+id/audiobookClassification"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex: Topic:biology, Register:academic, Topic:programming_languages, Register:blog "
+	/>
+	
+<TextView 
+	android:id="@+id/tasknotesLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="TODOs, Tasks, Notes:"
+	/>	
+<EditText 
+	android:id="@+id/tasknotes"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="Read sections 3.4 and write a quick summary"
+	/>	
+	
+<TextView 
+	android:id="@+id/audiobookCitationsLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Possible Citations:"
+	/>
+<EditText 
+	android:id="@+id/audiobookCitations"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex (Adams 2000), (Adams and Miller 2000)"
+	/>
+	
+<TextView 
+	android:id="@+id/audiobookPublicationDateLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Publication Date(s):"
+	/>
+<EditText 
+	android:id="@+id/audiobookPublicationDate"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex 2000"
+	/>
+	
+<TextView 
+	android:id="@+id/audiobookChunksLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Chunk(s):"
+	/>
+<EditText 
+	android:id="@+id/audiobookChunks"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="Section 1.1"
+	/>
+
+<TextView 
+	android:id="@+id/audiobookfileNameLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Filename:"
+	/>	
+<EditText 
+	android:id="@+id/audiobookFileName"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex Adams-2000-Theory of pumpkins.pdf"
+	/>
+
+<TextView 
+	android:id="@+id/audiobookfilePathLabel"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:text="Full Path and Filename:"
+	/>	
+<EditText 
+	android:id="@+id/audiobookFullFilePathandFileName"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:hint="ex /sdcard/path/to/Adams-2000-Theory of pumpkins.pdf"
+	/>
+
+	
+
+	
+</LinearLayout>
+</ScrollView>

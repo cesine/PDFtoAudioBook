@@ -41,6 +41,7 @@ public class DocumentsActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setTitle("Registered AudioBooks");
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
 
         // If no data was given in the intent (because we were started
@@ -59,7 +60,7 @@ public class DocumentsActivity extends ListActivity {
                                         AudiobookColumns.DEFAULT_SORT_ORDER);
 
         // Used to map Audiobooks entries from the database to views
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.audiobookslist_item, cursor,
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.list_item_document, cursor,
                 new String[] { AudiobookColumns.TITLE }, new int[] { android.R.id.text1 });
         setListAdapter(adapter);
     }

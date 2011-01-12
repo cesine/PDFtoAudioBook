@@ -1,7 +1,12 @@
 package ca.openlanguage.pdftoaudiobook.ui;
 
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.util.StringTokenizer;
+
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +17,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
@@ -34,7 +38,7 @@ public class DocumentsEditDetailActivity extends Activity{
      */
     private static final String[] PROJECTION = new String[] {
         AudiobookColumns._ID, // 0
-        AudiobookColumns.AUDIOBOOK, // 1
+        AudiobookColumns.TASKNOTES, // 1
         AudiobookColumns.TITLE, // 2
         AudiobookColumns.AUTHOR, //3
         AudiobookColumns.CITATION, //4
@@ -46,14 +50,14 @@ public class DocumentsEditDetailActivity extends Activity{
         AudiobookColumns.PUBLICATION_DATE, //10
         AudiobookColumns.THUMBNAIL, //11
         AudiobookColumns.STARRED, //12
-        AudiobookColumns.AUDIOBOOK, //13
+        
     };
 
     /** 
      * The index of the columns in teh PROJECTION (above) and will be used to 
      * pull the right strings out of the right positions in the cursor
      */
-    private static final int COLUMN_INDEX_AUDIOBOOK = 1;
+    private static final int COLUMN_INDEX_TASKNOTES = 1;
     private static final int COLUMN_INDEX_TITLE = 2;
     private static final int COLUMN_INDEX_AUTHOR = 3;
     private static final int COLUMN_INDEX_CITATION = 4;
@@ -67,6 +71,7 @@ public class DocumentsEditDetailActivity extends Activity{
     private static final int COLUMN_INDEX_STARRED = 12;
     
     //not needed
+    //private static final int COLUMN_INDEX_TASKNOTES = 13;
     //private static final int COLUMN_INDEX_CREATED_DATE = 14;
     //private static final int COLUMN_INDEX_MODIFIED_DATE = 15;
     
@@ -74,7 +79,7 @@ public class DocumentsEditDetailActivity extends Activity{
      * These are the constants which are put into a state bundle to identify the string contents
      * which are preserved eg, origTitle is th key for the the value "THeory of pumpkins"
      */
-    private static final String ORIGINAL_CONTENT = "origContent";
+    private static final String ORIGINAL_TASKNOTE = "origContent";
     private static final String ORIGINAL_TITLE = "origTitle";
     private static final String ORIGINAL_AUTHOR = "origAuthor";
     private static final String ORIGINAL_CITATION = "origCitation";
@@ -96,7 +101,7 @@ public class DocumentsEditDetailActivity extends Activity{
     private int mState;
     private Uri mUri;
     private Cursor mCursor;
-    private EditText mText;//the audiobook field
+    private EditText mTaskNotesEditText;//the mTaskNotesEditText field
     private EditText mTitleEditText;
     private EditText mAuthorEditText;
     private EditText mCitationEditText;
@@ -109,9 +114,9 @@ public class DocumentsEditDetailActivity extends Activity{
     private EditText mThumbnailEditText;//probably won't be displayed
     private EditText mStarredEditText;//should be checkbox
 
-    //a holder for the original text (prior to user edits) for the main content of the audiobook, 
+    //a holder for the original text (prior to user edits) for the main content of the mOriginalTaskNotes, 
     //make more Strings like this one for the other columns
-    private String mOriginalContent;
+    private String mOriginalTaskNotes;
     private String mOriginalTitle;
     private String mOriginalAuthor;
     private String mOriginalCitation;
@@ -123,6 +128,10 @@ public class DocumentsEditDetailActivity extends Activity{
     private String mOriginalFullFilePathAndFileName;
     private String mOriginalThumbnail;
     private String mOriginalStarred;
+    
+    private String fullPathAndFileName;
+	private String fileName;
+	private Boolean mRegisterPDF;
 
     /**
      * A custom EditText that draws lines between each line of text that is displayed.
@@ -164,7 +173,20 @@ public class DocumentsEditDetailActivity extends Activity{
         final Intent intent = getIntent();
 
         // Do some setup based on the action being performed.
-        final String action = intent.getAction();
+         String action = intent.getAction();
+         Uri dataUri = intent.getData();
+         Uri dataUriToTriggerNewAudioBook = AudiobookColumns.CONTENT_URI;
+         mRegisterPDF = false;
+        
+        Toast tellUser = Toast.makeText(this, 
+        		"The data in the uri is: "+dataUri.toString(), Toast.LENGTH_LONG);
+        //tellUser.show();
+        
+        if( dataUri.toString().startsWith("file://") ){
+        	//register a pdf
+        	mRegisterPDF = true;
+        	action=Intent.ACTION_INSERT;
+        }
         if (Intent.ACTION_EDIT.equals(action)) {
             // Requested to edit: set that state, and the data being edited.
             mState = STATE_EDIT;
@@ -174,8 +196,15 @@ public class DocumentsEditDetailActivity extends Activity{
             // in the container.
             mState = STATE_INSERT;
             //this is run when add audiobook is called, prior to an data being entered.
-            mUri = getContentResolver().insert(intent.getData(), null);
+            if(mRegisterPDF ==true){
+            	getPDFFileNameAndPath();
+            	//resent the intent data to an appropriate thing for a new note.
+            	//mUri = getContentResolver().insert(dataUriForANewAudioBook, null);
+                intent.setData(dataUriToTriggerNewAudioBook);
+            }
 
+            mUri = getContentResolver().insert(intent.getData(), null);
+            
             // If we were unable to create a new audiobook, then just finish
             // this activity.  A RESULT_CANCELED will be sent back to the
             // original activity if they requested a result.
@@ -192,16 +221,16 @@ public class DocumentsEditDetailActivity extends Activity{
 
         } else {
             // Whoops, unknown action!  Bail.
-            Log.e(TAG, "Unknown action, exiting");
+        	Log.e(TAG, "Unknown action, exiting");
             finish();
             return;
         }
 
         // Set the layout for this activity.  You can find it in res/layout/audiobook_editor.xml
-        setContentView(R.layout.audiobook_editor);
+        setContentView(R.layout.activity_audiobooks_editdetail);
         
         // The text view for our audiobook, identified by its ID in the XML file.
-        mText = (EditText) findViewById(R.id.audiobook);
+        mTaskNotesEditText = (EditText) findViewById(R.id.tasknotes);
         
         
         mTitleEditText = (EditText) findViewById(R.id.audiobookTitle);
@@ -227,6 +256,17 @@ public class DocumentsEditDetailActivity extends Activity{
          *  given in COLUMN_INDEX
          */
         mCursor = managedQuery(mUri, PROJECTION, null, null, null);
+        
+        
+        /**
+         * If its a new document created based on context clicking ona  pdf, then populate teh 
+         * fields using the pdf document's info
+         */
+        if(mRegisterPDF==true){
+        	fillDocumentDetailsIntoForm();
+        	saveAudiobook();
+        }
+        
 
         // If an instance of this activity had previously stopped, we can still
         // get the original text it started with before the user pushed back or te activity was paused. i
@@ -236,7 +276,7 @@ public class DocumentsEditDetailActivity extends Activity{
          * in ORIGINAL_*****columname*** ?
          */
         if (savedInstanceState != null) {
-            mOriginalContent = savedInstanceState.getString(ORIGINAL_CONTENT);
+            mOriginalTaskNotes = savedInstanceState.getString(ORIGINAL_TASKNOTE);
             mOriginalTitle = savedInstanceState.getString(ORIGINAL_TITLE);
             mOriginalAuthor = savedInstanceState.getString(ORIGINAL_AUTHOR);
             mOriginalCitation = savedInstanceState.getString(ORIGINAL_CITATION);
@@ -303,14 +343,14 @@ public class DocumentsEditDetailActivity extends Activity{
              * should be saved here first.
              * 
              * This gets the string for each column, sets the TextKeepState on each edittext
-             * and also puts the text into a member variable of the object called mOriginalContent
+             * and also puts the text into a member variable of the object called mOriginalTaskNotes
              * 
              * Should only do this if previous OriginalContent doesnt exist, so and an if...
              * 
              */
-            String audiobook = mCursor.getString(COLUMN_INDEX_AUDIOBOOK);
-            mText.setTextKeepState(audiobook);
-            mOriginalContent = audiobook;
+            String tasknotes = mCursor.getString(COLUMN_INDEX_TASKNOTES);
+            mTaskNotesEditText.setTextKeepState(tasknotes);
+            mOriginalTaskNotes = tasknotes;
             
             String title = mCursor.getString(COLUMN_INDEX_TITLE);
             mTitleEditText.setTextKeepState(title);
@@ -366,7 +406,7 @@ public class DocumentsEditDetailActivity extends Activity{
         	 * Rare:
         	 */
             setTitle(getText(R.string.error_title));
-            mText.setText(getText(R.string.error_message));
+            mTaskNotesEditText.setText(getText(R.string.error_message));
         }
     }
 
@@ -374,7 +414,7 @@ public class DocumentsEditDetailActivity extends Activity{
     protected void onSaveInstanceState(Bundle outState) {
         // Save away the original text, so we still have it if the activity
         // needs to be killed while paused.
-        outState.putString(ORIGINAL_CONTENT, mOriginalContent);
+        outState.putString(ORIGINAL_TASKNOTE, mOriginalTaskNotes);
         outState.putString(ORIGINAL_TITLE, mOriginalTitle);
         outState.putString(ORIGINAL_AUTHOR, mOriginalAuthor);
         outState.putString(ORIGINAL_CITATION, mOriginalCitation);
@@ -425,11 +465,11 @@ public class DocumentsEditDetailActivity extends Activity{
             menu.setGroupVisible(R.id.menu_group_edit, true);
             menu.setGroupVisible(R.id.menu_group_insert, false);
             
-            // Check if audiobook has changed and enable/disable the revert option
+            // Check if audiobook details have changed and enable/disable the revert option
             //TODO change the logic to make revert act like an undo action on one field.
-            String savedAudiobook = mCursor.getString(COLUMN_INDEX_AUDIOBOOK);
-            String currentAudiobook = mText.getText().toString();
-            if (savedAudiobook.equals(currentAudiobook)) {
+            String savedTasknotes = mCursor.getString(COLUMN_INDEX_TASKNOTES);
+            String currentTasknotes = mTaskNotesEditText.getText().toString();
+            if (savedTasknotes.equals(currentTasknotes)) {
                 menu.findItem(R.id.menu_revert).setEnabled(false);
             } else {
                 menu.findItem(R.id.menu_revert).setEnabled(true);
@@ -496,7 +536,7 @@ public class DocumentsEditDetailActivity extends Activity{
              *  Write the contents of the edit texts back into the provider.
              */
             //TOD put the other edit fields here
-            values.put(AudiobookColumns.AUDIOBOOK, mText.getText().toString());
+            values.put(AudiobookColumns.TASKNOTES, mTaskNotesEditText.getText().toString());
             values.put(AudiobookColumns.TITLE, mTitleEditText.getText().toString());
             
             //put all the fields (except the metadata fields) into the values to update row in the database
@@ -544,7 +584,7 @@ public class DocumentsEditDetailActivity extends Activity{
                 /* 
                  * put other content columns here too
                  */
-                values.put(AudiobookColumns.AUDIOBOOK, mOriginalContent);
+                values.put(AudiobookColumns.TASKNOTES, mOriginalTaskNotes);
                 values.put(AudiobookColumns.TITLE, mOriginalTitle);
                 values.put(AudiobookColumns.AUTHOR, mOriginalAuthor);
                 values.put(AudiobookColumns.CLASSIFICATION, mOriginalClassification);
@@ -588,8 +628,72 @@ public class DocumentsEditDetailActivity extends Activity{
             mCursor.close();
             mCursor = null;
             getContentResolver().delete(mUri, null, null);
-            mText.setText("");
+            mTaskNotesEditText.setText("");
         }
+    }
+    /**
+     * Return file name and path.
+     * @return string
+     */
+    private void getPDFFileNameAndPath() {
+        final Intent intent = getIntent();
+		Uri uri = intent.getData();    	
+		fullPathAndFileName = uri.getPath().toString();
+		
+		int lastPosition = uri.getPathSegments().size() - 1 ;
+		fileName = uri.getPathSegments().get(lastPosition);
+		
+		if (uri.getScheme().equals("file")) {
+			return ;//fullPathAndFileName;
+    		//return new PDF(new File(fullPathAndFileName));
+    	} else if (uri.getScheme().equals("content")) {
+    		ContentResolver cr = this.getContentResolver();
+    		FileDescriptor fileDescriptor;
+			try {
+				fileDescriptor = cr.openFileDescriptor(uri, "r").getFileDescriptor();
+			} catch (FileNotFoundException e) {
+				throw new RuntimeException(e); // TODO: handle errors
+			}
+			fileName = "Unknown - 2010 - Unknown.pdf";
+			fullPathAndFileName = "Unknown - 2010 - Unknown.pdf";//fileDescriptor.toString();
+			return ;//fileDescriptor.toString();
+    		//return new PDF(fileDescriptor);
+    	} else {
+    		throw new RuntimeException("don't know how to get filename from " + uri);
+    	}
+    }
+private void fillDocumentDetailsIntoForm(){
+    	
+       
+        
+        //divide filename on hyphens -, replace underscores with spaces
+        StringTokenizer fileNameSections = new StringTokenizer(fileName.replaceAll("_", " "), "-");
+        
+        //assume the filename is in format author - date - title, if not longer than 3 tokens, put 
+        //later use metadata and the actual text to extract information
+        String author="";
+        String date ="";
+        String title ="";
+        if(fileNameSections.countTokens()>2){
+        	author = fileNameSections.nextToken().replaceAll(",", " and");
+        	date = fileNameSections.nextToken();
+        	title = fileNameSections.nextToken().replace(".pdf", "");
+        }else{
+        	title=fileName.replaceAll("_"," ").replace(".pdf","");
+        }
+        String citations = ""+author+" "+date;
+        
+        mFullFilePathAndFileNameEditText.setText(fullPathAndFileName);
+        mFileNameEditText.setText(fileName);
+        mTitleEditText.setText(title);
+        mAuthorEditText.setText(author);
+        mPubDateEditText.setText(date);
+        mCitationEditText.setText(citations);
+        
+        Toast tellUserInfoSource = Toast.makeText(this, 
+        		"Document info was auto-filled based on the file name. \n\n You can make any corrections needed.", Toast.LENGTH_LONG);
+        tellUserInfoSource.show();
+        
     }
 
 }

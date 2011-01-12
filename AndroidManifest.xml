@@ -3,13 +3,72 @@
       package="ca.openlanguage.pdftoaudiobook"
       android:versionCode="1"
       android:versionName="1.0">
-    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
+    <application 
+    	android:icon="@drawable/ic_dictionary"
+     	android:label="@string/app_name" 
+     	android:debuggable="true">
         <activity android:name=".PDFtoAudioBookHome"
                   android:label="@string/app_name">
 
         </activity>
         <activity 	android:name=".RegisterPDFActivity"
             		android:label="@string/register_pdf_file_message">
+
+        </activity>
+
+
+    
+    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.ChunksActivity"
+    			android:label="ChunksActivity">
+    	    <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.chunk" />
+            </intent-filter>
+    	</activity>
+    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsActivity"
+    			android:label="DocumentsActivity">
+
+    	    <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.audiobook" />
+            </intent-filter>
+         </activity>
+         
+         	
+         <activity android:name="ca.openlanguage.pdftoaudiobook.ui.PDFtoAudioBookHomeActivity"
+    			android:label="PDF to AudioBook Home"
+    			>    		
+    		<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter> 
+    	</activity>
+    	
+    	
+    	
+    	
+    	
+    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsEditDetailActivity"
+    			android:label="Edit/Register new AudioBook"
+    			>		
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="ca.openlanguage.pdftoaudiobook.action.EDIT_DOCUMENT_DETAILS" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.audiobook" />
+            </intent-filter>              
+                        <!-- This filter says that we can create a new audiobook inside
+                 of a directory of audiobooks. -->
+            <intent-filter>
+                <action android:name="android.intent.action.INSERT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.audiobook" />
+            </intent-filter>
+            <!-- allows the application to react to pdf context clicks, will open the doc details and 
+            fill in based on file name or pdf metadata -->
             <intent-filter>
 				<action android:name="android.intent.action.VIEW"></action>
 				<category android:name="android.intent.category.DEFAULT"></category>
@@ -29,48 +88,6 @@
 				<data android:host="*" android:scheme="file"
 					android:pathPattern=".*\.pdf" />
 			</intent-filter>
-        </activity>
-
-
-    
-    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.ChunksActivity"
-    			android:label="ChunksActivity">
-    	    <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.chunk" />
-            </intent-filter>
-    	</activity>
-    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsActivity"
-    			android:label="DocumentsActivity">
-    		<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> 
-    	    <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.audiobook" />
-            </intent-filter>
-         </activity>	
-         
-    	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsEditDetailActivity"
-    			android:label="Documents Edit Detail Activity"
-    			>		
-            <intent-filter>
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="ca.openlanguage.pdftoaudiobook.action.EDIT_DOCUMENT_DETAILS" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.audiobook" />
-            </intent-filter>              
-                        <!-- This filter says that we can create a new audiobook inside
-                 of a directory of audiobooks. -->
-            <intent-filter>
-                <action android:name="android.intent.action.INSERT" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.audiobook" />
-            </intent-filter>
     	</activity>	
     	
     	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.ChunksEditDetailActivity"
@@ -82,6 +99,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="vnd.android.cursor.item/vnd.openlanguage.pdftoaudiobook.chunk" />
             </intent-filter> 
+                          
+            <!-- This filter says that we can create a new audiobook inside
+                 of a directory of audiobooks. -->
+            <intent-filter>
+                <action android:name="android.intent.action.INSERT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.openlanguage.pdftoaudiobook.chunk" />
+            </intent-filter>
     	</activity>
     	
     	
@@ -122,10 +147,12 @@
             </intent-filter>
         </activity>
 
-        <provider android:name=".provider.AudioBookLibraryProvider"
+        <provider android:name="ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryProvider"
                   android:authorities="ca.openlanguage.pdftoaudiobook.provider.AudiobookLibrary" />
     	
-    
+    	<provider android:name="ca.openlanguage.pdftoaudiobook.provider.ChunkProvider"
+                  android:authorities="ca.openlanguage.pdftoaudiobook.provider.Chunks" />
+    	
 </application>
     <uses-sdk android:minSdkVersion="8" />
 

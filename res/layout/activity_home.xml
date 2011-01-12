@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_root"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+
+    <LinearLayout style="@style/TitleBar">
+        <ImageView style="@style/TitleBarLogo"
+            android:contentDescription="description_logo"
+            android:src="@drawable/title_logo" />
+
+        <View style="@style/TitleBarSpring" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageButton style="@style/TitleBarAction"
+            android:id="@+id/btn_title_refresh"
+            android:contentDescription="description_refresh"
+            android:src="@drawable/ic_title_refresh"
+            android:onClick="onRefreshClick" />
+        <ProgressBar style="@style/TitleBarProgressIndicator"
+            android:id="@+id/title_refresh_progress"
+            android:visibility="gone" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageButton style="@style/TitleBarAction"
+            android:contentDescription="description_search"
+            android:src="@drawable/ic_title_search"
+            android:onClick="onSearchClick" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="6dip">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <Button android:id="@+id/home_btn_schedule"
+                style="@style/HomeButton"
+                android:onClick="onAudioBookClick"
+                
+                android:drawableTop="@drawable/home_btn_office_hours"/>
+            <Button android:id="@+id/home_btn_map"
+                style="@style/HomeButton"
+                android:onClick="onMindMapClick"
+              
+                android:drawableTop="@drawable/home_btn_map"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <Button android:id="@+id/home_btn_sessions"
+                style="@style/HomeButton"
+                android:onClick="onListenClick"
+                
+                android:drawableTop="@drawable/home_btn_sessions"/>
+            <Button android:id="@+id/home_btn_starred"
+                style="@style/HomeButton"
+                android:onClick="onStarredClick"
+                
+                android:drawableTop="@drawable/home_btn_starred"/>
+        </LinearLayout>
+
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/now_playing_loading"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/now_playing_height"
+        android:orientation="horizontal"
+        android:background="#eee"
+        android:gravity="center">
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="6dip"
+            android:indeterminate="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_small"
+            android:text="Instructions"/>
+    </LinearLayout>
+</LinearLayout>

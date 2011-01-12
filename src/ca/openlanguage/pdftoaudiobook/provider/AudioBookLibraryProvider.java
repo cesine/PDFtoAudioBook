@@ -22,9 +22,9 @@ import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.Audioboo
 
 public class AudioBookLibraryProvider extends ContentProvider {
 
-    private static final String TAG = "AudiobookPadProvider";
+    private static final String TAG = "AudiobookProvider";
 
-    private static final String DATABASE_NAME = "audiobookpad.db";
+    private static final String DATABASE_NAME = "audiobook.db";
     private static final int DATABASE_VERSION = 2;
     private static final String AUDIOBOOKS_TABLE_NAME = "audiobooks";
 
@@ -62,7 +62,7 @@ public class AudioBookLibraryProvider extends ContentProvider {
                     + AudiobookColumns.THUMBNAIL + " TEXT,"
                     + AudiobookColumns.STARRED + " TEXT,"
                     
-                    + AudiobookColumns.AUDIOBOOK + " TEXT,"
+                    + AudiobookColumns.TASKNOTES + " TEXT,"
                     + AudiobookColumns.CREATED_DATE + " INTEGER,"
                     + AudiobookColumns.MODIFIED_DATE + " INTEGER"
                     + ");");
@@ -72,7 +72,7 @@ public class AudioBookLibraryProvider extends ContentProvider {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS audiobooks");
+            db.execSQL("DROP TABLE IF EXISTS "+ AUDIOBOOKS_TABLE_NAME);
             onCreate(db);
         }
     }//end databasehelper
@@ -180,8 +180,8 @@ public class AudioBookLibraryProvider extends ContentProvider {
         }
 
       // initialize nullable fields here
-        if (values.containsKey(AudiobookColumns.AUDIOBOOK) == false) {
-            values.put(AudiobookColumns.AUDIOBOOK, "");
+        if (values.containsKey(AudiobookColumns.TASKNOTES) == false) {
+            values.put(AudiobookColumns.TASKNOTES, "");
         }
         if (values.containsKey(AudiobookColumns.AUTHOR) == false) {
             values.put(AudiobookColumns.AUTHOR, "");
@@ -223,8 +223,10 @@ public class AudioBookLibraryProvider extends ContentProvider {
         
 
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        // it seems suspicious to only be the content of TASKNOTES, ah its the nullcolumnhack
+        
         //values contains title=<untitled> created=1294758635956 audiobook= modified=1294758635956
-        long rowId = db.insert(AUDIOBOOKS_TABLE_NAME, AudiobookColumns.AUDIOBOOK, values);
+        long rowId = db.insert(AUDIOBOOKS_TABLE_NAME, AudiobookColumns.TASKNOTES, values);
         if (rowId > 0) {
             Uri audiobookUri = ContentUris.withAppendedId(AudiobookColumns.CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(audiobookUri, null);
@@ -304,13 +306,8 @@ public class AudioBookLibraryProvider extends ContentProvider {
         sAudiobooksProjectionMap.put(AudiobookColumns.THUMBNAIL, AudiobookColumns.THUMBNAIL);
         sAudiobooksProjectionMap.put(AudiobookColumns.STARRED, AudiobookColumns.STARRED);
 
-             
         
-        
-
-        
-        
-        sAudiobooksProjectionMap.put(AudiobookColumns.AUDIOBOOK, AudiobookColumns.AUDIOBOOK);
+        sAudiobooksProjectionMap.put(AudiobookColumns.TASKNOTES, AudiobookColumns.TASKNOTES);
         sAudiobooksProjectionMap.put(AudiobookColumns.CREATED_DATE, AudiobookColumns.CREATED_DATE);
         sAudiobooksProjectionMap.put(AudiobookColumns.MODIFIED_DATE, AudiobookColumns.MODIFIED_DATE);
 

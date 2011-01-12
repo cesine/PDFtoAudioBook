@@ -4,20 +4,33 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     >
-    <TextView
-        android:id="@+id/chunk_content"
-        android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:maxLines="2"
-        android:ellipsize="end"
-         />
-    <TextView
-        android:id="@+id/chunk_title"
-        android:layout_width="fill_parent"
+        <TextView
+	        android:id="@android:id/text1"
+	        android:layout_width="fill_parent"
+	        android:layout_height="0dip"
+	        android:layout_weight="1"
+	        android:maxLines="2"
+	        android:ellipsize="end"
+	         />
+         <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="2dip"
-        android:gravity="right"
-        android:singleLine="true"
-         />
+        >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onPlayClick"
+            android:src="@drawable/now_playing_icon"
+            />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onGenerateClick"
+            android:src="@drawable/ic_title_refresh_alt"
+            />
+    </LinearLayout>
 </LinearLayout>

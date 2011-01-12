@@ -62,12 +62,8 @@ public class AudioBookLibraryDatabase {
 		public static final String THUMBNAIL = "thumbnail";
 		/** String */
 		public static final String STARRED= "starrred";
-
-        /**
-         * The audiobook itself
-         * <P>Type: TEXT</P>
-         */
-        public static final String AUDIOBOOK = "audiobook";
+		/** Blob TODOs read section 3.3 and write a quick summary, compare the definitions of xxxx here with those in yyyyy*/
+        public static final String TASKNOTES = "tasknotes";
 
         /**
          * The timestamp for when the audiobook was created
