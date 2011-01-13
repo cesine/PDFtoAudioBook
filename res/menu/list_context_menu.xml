@@ -4,6 +4,10 @@
           android:title="Open" />
     <item android:id="@+id/context_delete"
           android:title="Delete" />
+    <item android:id="@+id/context_generateaudio"
+    	  android:title="Generate Audio" />
+    <item android:id="@+id/context_play"
+    	  android:title="Play Audio" />
     <item android:id="@+id/context_generate"
-    	  android:title="Divide into chunks for Audio Files" />
+    	  android:title="Divide into chunks for Audio Files" />    	  
 </menu>

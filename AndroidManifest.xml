@@ -56,7 +56,7 @@
     	
     	
     	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsEditDetailActivity"
-    			android:label="Edit/Register new AudioBook"
+    			android:label="Register as new AudioBook"
     			>		
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />

@@ -15,15 +15,18 @@
          />
     <TextView
         android:id="@+id/document_date_added"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingTop="2dip"
         android:gravity="right"
         android:singleLine="true"
         android:background="#555"
-        android:text="2011-01-01"
+        android:text=""
          />
-         <ImageButton
+         
+</LinearLayout>
+<!-- 
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -31,16 +34,6 @@
             android:src="@drawable/now_playing_icon"
             />
             <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onGenerateClick"
-            android:src="@drawable/ic_title_refresh_alt"
-            />
-</LinearLayout>
-<!-- 
-        
-        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

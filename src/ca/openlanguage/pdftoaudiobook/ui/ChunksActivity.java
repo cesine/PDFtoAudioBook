@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -98,11 +99,14 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
         ChunkColumns._ID, // 0
         ChunkColumns.TITLE, // 1
         ChunkColumns.CHUNKS, //2
+        ChunkColumns.FULL_FILEPATH_AND_FILENAME, //3
     };
 
     /** The index of the title column */
     private static final int COLUMN_INDEX_TITLE = 1;
     private static final int COLUMN_INDEX_CHUNKTEXT = 2 ;
+    private static final int COLUMN_INDEX_FULLPATH_AND_FILENAME = 3 ;
+    
     
     
     @Override
@@ -134,7 +138,7 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
     		mFileName = extras.getString(AudiobookColumns.FILENAME);
     		mRegisterChunks = true;
     		Toast tellUser = Toast.makeText(this, 
-            		"Generating chunks for: "+ mFileName+" at "+ mOriginalFileNameAndPath +"\n\n This may take a while depending on the pdf", Toast.LENGTH_LONG);
+            		"Generating chunks for: "+ mFileName+"\n\n This may take a while depending on the pdf", Toast.LENGTH_LONG);
             tellUser.show();
             
             
@@ -162,9 +166,17 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
             		chunkTitle = (String)iteratorForChunks.next();
             		chunkText = (String)chunks.get(chunkTitle);
             		
+            		/*
+            		 * Resegment and clean text chunk
+            		 * 
+            		 */
+            		String cleanedChunk=cleanText(chunkText);
+            		
+            		
             		ContentValues values = new ContentValues();
                 	values.put(ChunkColumns.TITLE, chunkTitle);
-                	values.put(ChunkColumns.CHUNKS, chunkText);
+                	values.put(ChunkColumns.CHUNKS, cleanedChunk);
+                	values.put(ChunkColumns.FULL_FILEPATH_AND_FILENAME, mOutputFilePath+"/"+chunkTitle.replaceAll(" ","_")+".wav");
                 	Uri uriUnusedJustToInsert = getContentResolver().insert(ChunkColumns.CONTENT_URI, values);
             	}
             	
@@ -284,6 +296,48 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
             // Delete the chunk that the context menu is for
             getContentResolver().delete(chunkUri, null, null);
             return true;
+        case R.id.context_play:
+            // Launch activity to view/edit the currently selected item
+            //startActivity(new Intent(Intent.ACTION_EDIT, chunkUri));
+        	Cursor cursor = (Cursor) getListAdapter().getItem(info.position);
+        	String chunk =  cursor.getString(COLUMN_INDEX_CHUNKTEXT);
+        	if (chunk.length()>351){
+        		chunk = chunk.substring(0,350);
+        	}
+        	mTts.speak(chunk,
+          	        TextToSpeech.QUEUE_ADD,  
+          	        null);
+            return true;
+        case R.id.context_generateaudio:
+        	cursor = (Cursor) getListAdapter().getItem(info.position);
+        	String chunksFileName= cursor.getString(COLUMN_INDEX_TITLE).replaceAll(" ", "_");
+        	chunksFileName =chunksFileName+".wav";
+        	chunk =  cursor.getString(COLUMN_INDEX_CHUNKTEXT);
+        	if (chunk.length()>301){
+        		chunk = chunk.substring(0,300);
+        	}
+//        	}startActivity(tempIntent);
+            // Launch activity to view/edit the currently selected item
+            //startActivity(new Intent(Intent.ACTION_EDIT, chunkUri));
+        	
+        	//File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC+"/Life_of_Pi/");
+            //File file = new File (path, chunksFileName);
+            //try{ 
+            //path.mkdirs();
+        	
+        	Toast tellUser = Toast.makeText(this, 
+            		"Generating audio: "+cursor.getString(COLUMN_INDEX_FULLPATH_AND_FILENAME), Toast.LENGTH_LONG);
+            tellUser.show();
+            	
+            	mTts.synthesizeToFile(chunk,
+            			null,  
+            			cursor.getString(COLUMN_INDEX_FULLPATH_AND_FILENAME));//"/sdcard/Music/Life_of_Pi/Chapter_13.wav"); //tried changing to path variable but didnt work.
+    	
+        	
+//        	mTts.speak("I will make this audio file for you, please wait.",
+//          	        TextToSpeech.QUEUE_ADD, 
+//          	        null);
+            return true;
         default:
             return super.onContextItemSelected(item);
         }
@@ -316,6 +370,14 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
           mTts.speak("I will play this chunk of the Audiobook.",
       	        TextToSpeech.QUEUE_ADD,  
       	        null);
+    }
+    public String cleanText(String stringIn){
+    	String stringOut = "";
+    	StringTokenizer tokens = new StringTokenizer(stringIn,".",true);
+		while (tokens.hasMoreTokens()){
+			stringOut = stringOut + "\n" + tokens.nextToken().replaceAll("\n"," ") ;
+		}
+    	return stringOut;
     }
     
     public String openFileStreams(){
@@ -380,9 +442,9 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
 		return message;
 	}
     public String chunkItCompletely(String splitOn){
-		if (false){
-			return "chunking turned off to save time";
-		}
+//		if (false){
+//			return "chunking turned off to save time";
+//		}
 		 /*
 		 * Here is a brief summary of the recommended approach for handling expensive operations:
 
@@ -433,8 +495,8 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
 				 *  	-make a new file out or
 				 * 		-clear the string
 				 */
-				
-				if (line.trim().startsWith(mSplitOn) ) {
+				//String digitSections = "\\d+\\.\\d+"; //3.4, 12.22 etc
+				if (line.trim().startsWith(mSplitOn) && mSplitOn.length()>3 ) {
 					chunks.put(chunkName, chunkString);
 					//Toast tellUser = Toast.makeText(mParentsContext, 
 		            //		"The Chunk Name: "+chunkName+":\n\n"+chunkString, Toast.LENGTH_LONG);
@@ -442,7 +504,11 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
 		            
 					chunkString = "";
 					chunkName = line.trim().replaceAll(" ", "_");
-					message = message + chunkName + lineBreak;
+					if(chunkName.length()>21){
+						message = message +chunkName.substring(0,20) + lineBreak;
+					}else{
+						message = message + chunkName + lineBreak;
+					}
 				}
 				/*
 				 * Add the line to the chunk, 
@@ -481,7 +547,7 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
 			
 		//progressBar.dismiss();
 		
-        return "Chunked on "+splitOn+" the result is: \n\n"+chunks.size()+" chunks.\n  "+message;
+        return "Chunked on "+splitOn+" the result is: \n\n"+chunks.size()+" chunks.\n"+message;
 	}
 
 }

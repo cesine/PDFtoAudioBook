@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -165,6 +166,20 @@ public class DocumentsActivity extends ListActivity {
             // Delete the audiobook that the context menu is for
             getContentResolver().delete(audiobookUri, null, null);
             return true;
+        case R.id.context_play:
+            // Launch activity to view/edit the currently selected item
+            //startActivity(new Intent(Intent.ACTION_EDIT, chunkUri));
+//        	mTts.speak("I will play this chunk of the Audio Book.",
+//          	        TextToSpeech.QUEUE_ADD,  
+//          	        null);
+            return true;
+        case R.id.context_generateaudio:
+            // Launch activity to view/edit the currently selected item
+            //startActivity(new Intent(Intent.ACTION_EDIT, chunkUri));
+//        	mTts.speak("I will make this audio file for you, please wait.",
+//          	        TextToSpeech.QUEUE_ADD, 
+//          	        null);
+            return true;
         case R.id.context_generate:
             // Launch the chunks activity but tell it that it should use this Audiobook's id
         	String actionToGenerateChunks="ca.openlanguage.pdftoaudiobook.action.GENERATE_CHUNKS";
@@ -176,7 +191,7 @@ public class DocumentsActivity extends ListActivity {
         	//Uri uriForThisAudioBook = AudiobookColumns.CONTENT_URI;
         	//tempIntent.setData(uriForThisAudioBook);
         	Toast tellUser = Toast.makeText(this, 
-            		"Generating chunks for: "+ cursor.getString(COLUMN_INDEX_FILENAME)+" at "+ cursor.getString(COLUMN_INDEX_FULLFILEPATH_AND_NAME) +"\n\n This may take a while depending on the pdf", Toast.LENGTH_LONG);
+            		"Generating chunks for: "+ cursor.getString(COLUMN_INDEX_FILENAME)+"\n\n This may take a while depending on the pdf", Toast.LENGTH_LONG);
             tellUser.show();
         	startActivity(tempIntent);
             return true;

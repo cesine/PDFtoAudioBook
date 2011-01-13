@@ -50,13 +50,14 @@ public class PDFtoAudioBookHomeActivity extends Activity implements TextToSpeech
         
 
         mTts = new TextToSpeech(this, this);
-        mTts.speak("This is a sample Home following UI best practices.",
-    	        TextToSpeech.QUEUE_FLUSH,  // Drop all pending entries in the playback queue.
-    	        null);
+//        mTts.speak("This is a sample Home following UI best practices.",
+//    	        TextToSpeech.QUEUE_FLUSH,  // Drop all pending entries in the playback queue.
+//    	        null);
 
     }
     
     public void onStarredClick(View v){
+    	startActivity(new Intent(this, ChunksActivity.class));
     }
     public void onAudioBookClick(View v){
     	startActivity(new Intent(this, DocumentsActivity.class));
@@ -66,8 +67,9 @@ public class PDFtoAudioBookHomeActivity extends Activity implements TextToSpeech
     }
     /** Handle "mind map" action. */
     public void onMindMapClick(View v) {
-    	mTts.speak("This would open the relevant mind map.",
-    	        TextToSpeech.QUEUE_FLUSH,  // Drop all pending entries in the playback queue.
-    	        null);
+    	startActivity(new Intent(this, DocumentsActivity.class));
+//    	mTts.speak("This would open the relevant mind map.",
+//    	        TextToSpeech.QUEUE_FLUSH,  // Drop all pending entries in the playback queue.
+//    	        null);
     }
 }

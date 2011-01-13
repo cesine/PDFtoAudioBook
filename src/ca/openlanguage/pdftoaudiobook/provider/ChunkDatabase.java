@@ -35,7 +35,7 @@ public class ChunkDatabase extends Activity {
         /**
          * The default sort order for this table
          */
-        public static final String DEFAULT_SORT_ORDER = "modified DESC";
+        public static final String DEFAULT_SORT_ORDER = "modified DESC";//"created";//modified DESC
     	
 		/** string type "Intensional Semantics" */
 		public static final String TITLE = "title";

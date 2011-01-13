@@ -22,6 +22,6 @@
         android:gravity="right"
         android:singleLine="true"
         android:background="#555"
-        android:text="2011-01-01"
+        android:text="2011-01-13"
          />
 </LinearLayout>

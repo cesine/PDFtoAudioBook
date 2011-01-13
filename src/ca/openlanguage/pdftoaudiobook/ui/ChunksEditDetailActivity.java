@@ -181,7 +181,7 @@ public class ChunksEditDetailActivity extends Activity {
         
         Toast tellUser = Toast.makeText(this, 
         		"The data in the uri is: "+dataUri.toString(), Toast.LENGTH_LONG);
-        tellUser.show();
+        //tellUser.show();
         
         if( dataUri.toString().startsWith(dataUriToTriggerNewChunk.toString()) ){
         	//register a pdf
