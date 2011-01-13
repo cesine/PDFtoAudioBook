@@ -179,18 +179,22 @@ public class DocumentsActivity extends ListActivity {
 //        	mTts.speak("I will make this audio file for you, please wait.",
 //          	        TextToSpeech.QUEUE_ADD, 
 //          	        null);
+        	Cursor cursor = (Cursor) getListAdapter().getItem(info.position);
+        	Toast tellUser = Toast.makeText(this, 
+            		"Scheduling "+cursor.getString(COLUMN_INDEX_FILENAME)+"audio book for generation.", Toast.LENGTH_LONG);
+            tellUser.show();
             return true;
         case R.id.context_generate:
             // Launch the chunks activity but tell it that it should use this Audiobook's id
         	String actionToGenerateChunks="ca.openlanguage.pdftoaudiobook.action.GENERATE_CHUNKS";
         	Intent tempIntent= new Intent(actionToGenerateChunks);//new Intent(this, ChunksActivity.class);
-        	Cursor cursor = (Cursor) getListAdapter().getItem(info.position);
+        	cursor = (Cursor) getListAdapter().getItem(info.position);
         	tempIntent.putExtra(AudiobookColumns.FULL_FILEPATH_AND_FILENAME, cursor.getString(COLUMN_INDEX_FULLFILEPATH_AND_NAME));
         	tempIntent.putExtra(AudiobookColumns.FILENAME, cursor.getString(COLUMN_INDEX_FILENAME));
         	tempIntent.putExtra(AudiobookColumns.CHUNKS, cursor.getString(COLUMN_INDEX_CHUNK_SPLITON));
         	//Uri uriForThisAudioBook = AudiobookColumns.CONTENT_URI;
         	//tempIntent.setData(uriForThisAudioBook);
-        	Toast tellUser = Toast.makeText(this, 
+        	tellUser = Toast.makeText(this, 
             		"Generating chunks for: "+ cursor.getString(COLUMN_INDEX_FILENAME)+"\n\n This may take a while depending on the pdf", Toast.LENGTH_LONG);
             tellUser.show();
         	startActivity(tempIntent);

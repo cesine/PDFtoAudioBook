@@ -1,7 +1,10 @@
 package ca.openlanguage.pdftoaudiobook.ui;
 
+import java.io.BufferedReader;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.StringTokenizer;
 
 import android.app.Activity;
@@ -27,6 +30,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import ca.openlanguage.pdftoaudiobook.R;
 import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.AudiobookColumns;
+import ca.openlanguage.pdftoaudiobook.provider.ChunkDatabase.ChunkColumns;
 
 public class DocumentsEditDetailActivity extends Activity{
     private static final String TAG = "AudiobookEditor";
@@ -675,13 +679,32 @@ private void fillDocumentDetailsIntoForm(){
         String date ="";
         String title ="";
         if(fileNameSections.countTokens()>2){
-        	author = fileNameSections.nextToken().replaceAll(",", " and");
+        	author = fileNameSections.nextToken().replaceAll(",", " and ");
         	date = fileNameSections.nextToken();
         	title = fileNameSections.nextToken().replace(".pdf", "");
         }else{
         	title=fileName.replaceAll("_"," ").replace(".pdf","");
         }
         String citations = ""+author+" "+date;
+        String preview="";
+        try {
+        	BufferedReader originalFile = new BufferedReader(new FileReader(fullPathAndFileName.replace(".pdf", ".txt")));
+        	int count = 1;
+        	String line;
+        	try {
+				while ((line = originalFile.readLine()) != null && count <200) {
+					count ++;
+					preview = preview+line;
+					
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         mFullFilePathAndFileNameEditText.setText(fullPathAndFileName);
         mFileNameEditText.setText(fileName);
@@ -689,6 +712,8 @@ private void fillDocumentDetailsIntoForm(){
         mAuthorEditText.setText(author);
         mPubDateEditText.setText(date);
         mCitationEditText.setText(citations);
+        mChunksEditText.setText("Section");
+        mTaskNotesEditText.setText(preview);
         
         Toast tellUserInfoSource = Toast.makeText(this, 
         		"Document info was auto-filled based on the file name. \n\n You can make any corrections needed.", Toast.LENGTH_LONG);

@@ -174,8 +174,10 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
             		
             		
             		ContentValues values = new ContentValues();
+            		values.put(ChunkColumns.CHUNKS, "Section");
                 	values.put(ChunkColumns.TITLE, chunkTitle);
                 	values.put(ChunkColumns.CHUNKS, cleanedChunk);
+                	
                 	values.put(ChunkColumns.FULL_FILEPATH_AND_FILENAME, mOutputFilePath+"/"+chunkTitle.replaceAll(" ","_")+".wav");
                 	Uri uriUnusedJustToInsert = getContentResolver().insert(ChunkColumns.CONTENT_URI, values);
             	}
@@ -372,10 +374,11 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
       	        null);
     }
     public String cleanText(String stringIn){
+    	stringIn= stringIn.replaceAll("Fig.", "figure ");
     	String stringOut = "";
     	StringTokenizer tokens = new StringTokenizer(stringIn,".",true);
 		while (tokens.hasMoreTokens()){
-			stringOut = stringOut + "\n" + tokens.nextToken().replaceAll("\n"," ") ;
+			stringOut = stringOut + "\n" + tokens.nextToken().replaceAll("\n"," ").replaceAll("- ", "") ;
 		}
     	return stringOut;
     }
@@ -442,44 +445,11 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
 		return message;
 	}
     public String chunkItCompletely(String splitOn){
-//		if (false){
-//			return "chunking turned off to save time";
-//		}
-		 /*
-		 * Here is a brief summary of the recommended approach for handling expensive operations:
-
-				Create a Handler object in your UI thread
-				Spawn off worker threads to perform any required expensive operations
-				Post results from a worker thread back to the UI thread's handler either through a Runnable or a Message
-				Update the views on the UI thread as needed
-		 */
-		
-		/*
-		 * ProgressDialog progressBar;
-		progressBar = ProgressDialog.show(mParentsContext,
-				"Dividing the file into sections", "please wait....", true);
-		 */
-		
-		/*
-		new Thread() {
-			public void run() {
-				try {
-					// just doing some long operation
-					sleep(5000);
-				} catch (Exception e) {
-				}
-				handler.sendEmptyMessage(0);
-			}
-		}.start();
-		
-		
-		progressBar.dismiss();
-		*/
 		
 		String chunkString = "";
 		
 		String lineBreak ="\n";
-		String chunkName = "00preface";
+		String chunkName = mFileName.replace(".pdf", ".txt")+"Section00";
 		//chunks.put(chunkName, chunkString);
 		
 		String message="";
@@ -522,30 +492,7 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*write the chunks out to file for examination
-		try {
-			FileWriter out = new FileWriter(mOutputFilePath+"/test.txt");
-			out.write(chunks.toString());
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		*/
-		
-	  	// Tell the media scanner about the new file so that it is
-        // immediately available to the user.
-    	/*
-		MediaScannerConnection.scanFile(this,
-                new String[] { mOutputFilePath+"/text.txt"}, null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-            public void onScanCompleted(String path, Uri uri) {
-                Log.i("ExternalStorage", "Scanned " + path + ":");
-                Log.i("ExternalStorage", "-> uri=" + uri);
-            }
-        });
-        */
-			
-		//progressBar.dismiss();
+		chunks.put(chunkName, chunkString);
 		
         return "Chunked on "+splitOn+" the result is: \n\n"+chunks.size()+" chunks.\n"+message;
 	}
