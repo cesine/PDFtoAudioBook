@@ -192,6 +192,7 @@ public class DocumentsActivity extends ListActivity {
         	tempIntent.putExtra(AudiobookColumns.FULL_FILEPATH_AND_FILENAME, cursor.getString(COLUMN_INDEX_FULLFILEPATH_AND_NAME));
         	tempIntent.putExtra(AudiobookColumns.FILENAME, cursor.getString(COLUMN_INDEX_FILENAME));
         	tempIntent.putExtra(AudiobookColumns.CHUNKS, cursor.getString(COLUMN_INDEX_CHUNK_SPLITON));
+        	
         	//Uri uriForThisAudioBook = AudiobookColumns.CONTENT_URI;
         	//tempIntent.setData(uriForThisAudioBook);
         	tellUser = Toast.makeText(this, 
