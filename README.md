@@ -6,19 +6,19 @@ AudioBook.
 
 Dependancies on the Device
 ----------------------------
-*[Android 2.2] the device should be running 2.2 or better
-*[TextToSpeech] is turned on in the settings 
-**[Voice] to have comercial quality audio you can search on the market for 
-"Loquendo" it's a commercial voice which costs about 5-6$
-*[Voice Recognition] is turned on in the settings
-*[Internet Connection] You need an internet connection to use the Voice
+* [Android 2.2] the device should be running 2.2 or better
+* [TextToSpeech] is turned on (see Settings)
+* to have comercial quality audio you can use 
+Loquendo it's a commercial voice which costs about 5-6$ (search Market)
+* [Voice Recognition] is turned on (see Settings)
+* [Internet Connection] You need an internet connection to use the Voice
 Recognizer, and to extract the text from the PDF.
-*[File Manager] a file manager such as OI File Manager 
+* [File Manager] a file manager such as OI File Manager (search Market) 
 
 
 Library Dependancies
 --------------------
-*None
+* None
 
 Contributing
 -------------
@@ -34,18 +34,18 @@ cleaner")
 
 Instalation using Eclipse
 -------------------------
-*Download the source code
-*Create an Android project and import the source files
-*Install it onto your device 
+* Download the source code
+* Create an Android project and import the source files
+* Install it onto your device 
 
 Using the application
 ---------------------
-*Check the device settings for Voice input & output to be sure that TextToSpeech
+* Check the device settings for Voice input & output to be sure that TextToSpeech
 and VoiceRecognition are enabled
-*Save some PDFs onto your device via the internet or SDCARD
-*Open the file manager, browse to your pdf, click on it and a menu will appear
+* Save some PDFs onto your device via the internet or SDCARD
+* Open the file manager, browse to your pdf, click on it and a menu will appear
 allowing you to register the pdf into your audio book list
-*Alternatively, you can open the application and listen to the instructions 
+* Alternatively, you can open the application and listen to the instructions 
 
 
 PDFtoAudioBook is released under the Apache License.
