@@ -75,6 +75,17 @@
                 android:onClick="onListenClick"
                 
                 android:drawableTop="@drawable/home_btn_sessions"/>
+            <Button android:id="@+id/home_btn_starred"
+                style="@style/HomeButton"
+                android:onClick="onStarredClick"
+                
+                android:drawableTop="@drawable/home_btn_starred"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
             <Button android:id="@+id/home_btn_schedule"
                 style="@style/HomeButton"
                 android:onClick="onStarredClick"
