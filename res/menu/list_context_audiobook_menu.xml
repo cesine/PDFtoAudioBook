@@ -7,7 +7,7 @@
     <item android:id="@+id/context_generateaudio"
     	  android:title="Generate Audio" />
     <item android:id="@+id/context_play"
-    	  android:title="Play Audio" />
+    	  android:title="Play Sample" />
     <item android:id="@+id/context_generate"
     	  android:title="Divide into chunks for Audio Files" />    	  
 </menu>

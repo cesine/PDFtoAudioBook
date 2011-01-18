@@ -5,4 +5,8 @@
           android:icon="@drawable/ic_menu_compose"
           android:alphabeticShortcut='a'
           android:title="Add" />
+    <item android:id="@+id/menu_about"
+          
+          android:alphabeticShortcut='h'
+          android:title="About" />
 </menu>
