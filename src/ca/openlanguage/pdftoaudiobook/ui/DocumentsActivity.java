@@ -143,7 +143,7 @@ public class DocumentsActivity extends ListActivity {
 
         // Inflate menu from XML resource
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.list_context_menu, menu);
+        inflater.inflate(R.menu.list_context_audiobook_menu, menu);
         
         // Set the context menu header
         menu.setHeaderTitle(cursor.getString(COLUMN_INDEX_TITLE));
@@ -207,7 +207,7 @@ public class DocumentsActivity extends ListActivity {
         	tempIntent.putExtra(AudiobookColumns.FULL_FILEPATH_AND_FILENAME, cursor.getString(COLUMN_INDEX_FULLFILEPATH_AND_NAME));
         	tempIntent.putExtra(AudiobookColumns.FILENAME, cursor.getString(COLUMN_INDEX_FILENAME));
         	tempIntent.putExtra(AudiobookColumns.CHUNKS, cursor.getString(COLUMN_INDEX_CHUNK_SPLITON));
-        	
+        	//tempIntent.putExtra(AudiobookColumns.TITLE, cursor.getString(COLUMN_INDEX_TITLE));
         	//Uri uriForThisAudioBook = AudiobookColumns.CONTENT_URI;
         	//tempIntent.setData(uriForThisAudioBook);
         	tellUser = Toast.makeText(this, 

@@ -4,6 +4,29 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
   
+  
+  
+    <LinearLayout style="@style/TitleBar">
+        <ImageView style="@style/TitleBarLogo"
+            android:contentDescription="description_logo"
+            android:src="@drawable/title_logo" />
+
+        <View style="@style/TitleBarSpring" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+        
+        <ProgressBar style="@style/TitleBarProgressIndicator"
+            android:id="@+id/title_refresh_progress"
+            android:visibility="gone" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+        <ImageButton style="@style/TitleBarAction"
+            android:contentDescription="description_search"
+            android:src="@drawable/ic_title_search"
+            android:onClick="onSearchClick" />
+    </LinearLayout>
+  
+  
   <include layout="@layout/activity_chunks_content" />
   
 </LinearLayout>

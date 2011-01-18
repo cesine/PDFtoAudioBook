@@ -107,8 +107,7 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
     
     
     /**
-     * The columns we are interested in from the database, Only displaying titles and keeping track
-     * of their IDs, but other useful info such as their starred values could be added later
+     * Subset of columns from the database for use by this activity
      */
     private static final String[] PROJECTION = new String[] {
         ChunkColumns._ID, // 0
@@ -134,9 +133,7 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
         
 
         Intent intent = getIntent();
-        
-
-
+       
        
        // If no data was given in the intent (because we were started
        // as a MAIN activity), then use our default content provider.
@@ -146,19 +143,22 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
 
         String action = intent.getAction();
         
+        /*
+         * If the activity recieved an intent to generate chunks, open the file, extract chunks and insert them into the database
+         * using a bundles of values which can be set immediately, other values are entered as defaults in the content provider
+         */
         String actionToGenerateChunks="ca.openlanguage.pdftoaudiobook.action.GENERATE_CHUNKS";
     	if (actionToGenerateChunks.equals(action)){
     		Bundle extras = intent.getExtras();
+    		//if txt exists, use that so that the user can edit the txt if the want)
     		mOriginalFileNameAndPath =  extras.getString(AudiobookColumns.FULL_FILEPATH_AND_FILENAME).replace(".pdf",".txt");
     		mFileName = extras.getString(AudiobookColumns.FILENAME);
     		mRegisterChunks = true;
-    		Toast tellUser = Toast.makeText(this, 
-            		"Generating chunks for: "+ mFileName+"\n\n This may take a while depending on the pdf", Toast.LENGTH_LONG);
-            tellUser.show();
+    		
             
             
             String sucessMessage = openFileStreams();
-            tellUser = Toast.makeText(this, 
+            Toast tellUser = Toast.makeText(this, 
             		sucessMessage, Toast.LENGTH_LONG);
             //tellUser.show();
             mParentContext= this;
@@ -192,17 +192,12 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
             		values.put(ChunkColumns.CHUNKS, "Section");
                 	values.put(ChunkColumns.TITLE, chunkTitle);
                 	values.put(ChunkColumns.CHUNKS, cleanedChunk);
-                	
+                	//values.put((ChunkColumns.FILENAME, "audiobooksfilename");
                 	values.put(ChunkColumns.FULL_FILEPATH_AND_FILENAME, mOutputFilePath+"/"+chunkTitle.replaceAll(" ","_")+".wav");
                 	Uri uriUnusedJustToInsert = getContentResolver().insert(ChunkColumns.CONTENT_URI, values);
             	}
             	
-            	
             }//end if there are chunks
-             
-
-            
-
     	}//end if to generate chunks
        
         
@@ -275,7 +270,7 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
 
         // Inflate menu from XML resource
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.list_context_menu, menu);
+        inflater.inflate(R.menu.list_context_chunk_menu, menu);
         
         // Set the context menu header
         menu.setHeaderTitle(cursor.getString(COLUMN_INDEX_TITLE));
@@ -333,27 +328,23 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
         	if (chunk.length()>301){
         		chunk = chunk.substring(0,300);
         	}
-//        	}startActivity(tempIntent);
-            // Launch activity to view/edit the currently selected item
-            //startActivity(new Intent(Intent.ACTION_EDIT, chunkUri));
-        	
+
         	//File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC+"/Life_of_Pi/");
-            //File file = new File (path, chunksFileName);
-            //try{ 
             //path.mkdirs();
+        	/*
+        	 * TODO: Using the "audiobook'sfilename" from that chunk, 
+        	 * 	look up the current title of the audiobook in the application
+        	 *  use that current title to create a directory
+        	 *  generate the output to that directory
+        	 */
         	
         	Toast tellUser = Toast.makeText(this, 
-            		"Generating audio: "+cursor.getString(COLUMN_INDEX_FULLPATH_AND_FILENAME), Toast.LENGTH_LONG);
+            		"Generating audio: "+cursor.getString(COLUMN_INDEX_FULLPATH_AND_FILENAME)+" into folder: ", Toast.LENGTH_LONG);
             tellUser.show();
             	
             	mTts.synthesizeToFile(chunk,
             			null,  
             			cursor.getString(COLUMN_INDEX_FULLPATH_AND_FILENAME));//"/sdcard/Music/Life_of_Pi/Chapter_13.wav"); //tried changing to path variable but didnt work.
-    	
-        	
-//        	mTts.speak("I will make this audio file for you, please wait.",
-//          	        TextToSpeech.QUEUE_ADD, 
-//          	        null);
             return true;
         default:
             return super.onContextItemSelected(item);
@@ -453,7 +444,11 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
         	directoryName = directoryName.replace(".txt", "");
         	directoryName = directoryName.replaceAll(" ", "_");
         	mOutputFilePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC+"/"+directoryName+"/");
-            mOutputFilePath.mkdirs();     
+            
+        	/*
+        	 * TODO: fix bug, directory is not being made
+        	 */
+        	mOutputFilePath.mkdirs();     
             message+="\nFile path for output is okay (it's in the Music directory). \n";
         }
        
@@ -462,9 +457,8 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
     public String chunkItCompletely(String splitOn){
 		
 		String chunkString = "";
-		
 		String lineBreak ="\n";
-		String chunkName = mFileName.replace(".pdf", ".txt")+"Section00";
+		String chunkName = "Section00"+mFileName.replace(".pdf", ".txt");
 		//chunks.put(chunkName, chunkString);
 		
 		String message="";

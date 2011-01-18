@@ -19,6 +19,11 @@ import android.app.Activity;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+
+/*
+ * Chunk TODO: refactor chunk database into main database and into main provider, 
+ * revert to some of the design principles in the Jan 09 iteration (which were based on best practices found in Google IO Schedule 2010)
+ */
 public class ChunkDatabase extends Activity {
     public static final String AUTHORITY = "ca.openlanguage.pdftoaudiobook.provider.Chunks";
 

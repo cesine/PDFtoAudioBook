@@ -20,6 +20,7 @@ import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import android.app.Activity;
@@ -35,6 +36,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
@@ -47,9 +49,12 @@ import ca.openlanguage.pdftoaudiobook.R;
 import ca.openlanguage.pdftoaudiobook.provider.AudioBookLibraryDatabase.AudiobookColumns;
 import ca.openlanguage.pdftoaudiobook.provider.ChunkDatabase.ChunkColumns;
 
-public class DocumentsEditDetailActivity extends Activity{
+public class DocumentsEditDetailActivity extends Activity implements TextToSpeech.OnInitListener{
     private static final String TAG = "AudiobookEditor";
 
+	/** Talk to the user */
+    private TextToSpeech mTts;
+    
     /**
      * Standard projection for the interesting columns of a normal audiobook.
      * 
@@ -152,43 +157,41 @@ public class DocumentsEditDetailActivity extends Activity{
 	private String fileName;
 	private Boolean mRegisterPDF;
 
-    /**
-     * A custom EditText that draws lines between each line of text that is displayed.
-     */
-    public static class LinedEditText extends EditText {
-        private Rect mRect;
-        private Paint mPaint;
 
-        // we need this constructor for LayoutInflater
-        public LinedEditText(Context context, AttributeSet attrs) {
-            super(context, attrs);
-            
-            mRect = new Rect();
-            mPaint = new Paint();
-            mPaint.setStyle(Paint.Style.STROKE);
-            mPaint.setColor(0x800000FF);
-        }
-        
-        @Override
-        protected void onDraw(Canvas canvas) {
-            int count = getLineCount();
-            Rect r = mRect;
-            Paint paint = mPaint;
+	  
+	  //implement on Init for the text to speech
+		public void onInit(int status) {
+			if (status == TextToSpeech.SUCCESS) {
+				// Set preferred language to US english.
+				// Note that a language may not be available, and the result will
+				// indicate this.
+				int result = mTts.setLanguage(Locale.US);
+				// Try this someday for some interesting results.
+				// int result mTts.setLanguage(Locale.FRANCE);
+				if (result == TextToSpeech.LANG_MISSING_DATA
+						|| result == TextToSpeech.LANG_NOT_SUPPORTED) {
+					// Language data is missing or the language is not supported.
+					Log.e(TAG, "Language is not available.");
+				} else {
 
-            for (int i = 0; i < count; i++) {
-                int baseline = getLineBounds(i, r);
+					// mSpeakButton.setEnabled(true);
+					// mPauseButton.setEnabled(true);
+					// Greet the user.
+					// sayHello();
+				}
+			} else {
+				// Initialization failed.
+				Log.e(TAG, "Could not initialize TextToSpeech.");
+			}
+		}
 
-                canvas.drawLine(r.left, baseline + 1, r.right, baseline + 1, paint);
-            }
 
-            super.onDraw(canvas);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mTts = new TextToSpeech(this, this);
+        
         final Intent intent = getIntent();
 
         // Do some setup based on the action being performed.
@@ -198,7 +201,7 @@ public class DocumentsEditDetailActivity extends Activity{
          mRegisterPDF = false;
         
         Toast tellUser = Toast.makeText(this, 
-        		"The data in the uri is: "+dataUri.toString(), Toast.LENGTH_LONG);
+        		"The data in the uri is: \n"+dataUri.toString(), Toast.LENGTH_LONG);
         //tellUser.show();
         
         if( dataUri.toString().startsWith("file://") ){
@@ -539,7 +542,22 @@ public class DocumentsEditDetailActivity extends Activity{
     	//cancel audiobook undo's the user edits
     	cancelAudiobook();
     }
+    /*
+     * handles the play sample button
+     */
+    public void onPlayClick(View v) {
+        
+    	String sample = mTaskNotesEditText.getText().toString();
+    	if (sample.length()>351){
+    		sample = sample.substring(0,350);
+    	}
+    	mTts.speak(sample,
+      	        TextToSpeech.QUEUE_ADD,  
+      	        null);
+        
+    }    
     
+
     private final void saveAudiobook() {
         // Make sure their current
         // changes are safely saved away in the provider.  We don't need

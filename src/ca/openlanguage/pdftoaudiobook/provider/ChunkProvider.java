@@ -13,6 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
+/*
+ * Chunk TODO: refactor chunk database into main database and into main provider, 
+ * revert to some of the design principles in the Jan 09 itteration (which were based on best practices found in Google IO Schedule 2010)
+ */
+
 package ca.openlanguage.pdftoaudiobook.provider;
 
 import java.util.HashMap;

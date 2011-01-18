@@ -32,8 +32,6 @@
 
         </activity>
 
-
-    
     	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.ChunksActivity"
     			android:label="ChunksActivity">
     	    <intent-filter>
@@ -66,10 +64,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter> 
     	</activity>
-    	
-    	
-    	
-    	
     	
     	<activity android:name="ca.openlanguage.pdftoaudiobook.ui.DocumentsEditDetailActivity"
     			android:label="Register as new AudioBook"

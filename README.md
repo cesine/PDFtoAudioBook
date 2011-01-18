@@ -14,7 +14,7 @@ Loquendo it's a commercial voice which costs about 5-6$ (search Market)
 * [Internet Connection] You need an internet connection to use the Voice
 Recognizer, and to extract the text from the PDF.
 * [File Manager] a file manager such as OI File Manager (search Market) 
-
+* [Mind Mapping] a mind mapping app such as Thinking Space (search market)
 
 Library Dependancies
 --------------------
