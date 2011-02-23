@@ -23,22 +23,23 @@
     <TextView
         android:id="@android:id/text1"
         android:layout_width="fill_parent"
-        android:layout_height="0dip"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dip"
         android:layout_weight="1"
         android:maxLines="2"
         android:background="#333"
         android:ellipsize="end"
          />
-    <TextView
+   <TextView
         android:id="@+id/document_date_added"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="2dip"
+        android:layout_height="3dip"
+        android:paddingTop="0dip"
         android:gravity="right"
         android:singleLine="true"
-        android:background="#555"
+        android:background="#355"
         android:text=""
-         />
+         /> 
          
 </LinearLayout>
 <!-- 

@@ -325,8 +325,8 @@ public class ChunksActivity extends ListActivity implements TextToSpeech.OnInitL
         	String chunksFileName= cursor.getString(COLUMN_INDEX_TITLE).replaceAll(" ", "_");
         	chunksFileName =chunksFileName+".wav";
         	chunk =  cursor.getString(COLUMN_INDEX_CHUNKTEXT);
-        	if (chunk.length()>301){
-        		chunk = chunk.substring(0,300);
+        	if (chunk.length()>3001){
+        		chunk = chunk.substring(0,3001);
         	}
 
         	//File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC+"/Life_of_Pi/");
